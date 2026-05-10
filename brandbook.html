@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Brand Guidelines</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/swiss.css">
+</head>
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo" id="sidebar-logo">
+        <a href="index.html" class="sidebar-back" title="All brands">←</a>
+        <span id="sidebar-brand-name"></span>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    <div class="sidebar-export">
+      <button class="export-btn" onclick="__bbExportPDF && __bbExportPDF()" title="Print / Save as PDF">PDF</button>
+      <button class="export-btn" onclick="__bbExportHTML && __bbExportHTML()" title="Download as HTML file">HTML</button>
+    </div>
+    <div class="sidebar-bottom">
+      <span class="sidebar-year" id="sidebar-year"></span>
+      <span class="sidebar-sep">·</span>
+      <span class="sidebar-label">Brand Guidelines</span>
+    </div>
+  </aside>
+
+  <main class="content" id="content"></main>
+
+  <!-- Load project data, then app -->
+  <script src="js/projects.js"></script>
+  <script>
+    // Resolve BRAND from URL ?id= → sessionStorage → localStorage.
+    // Never falls back to brand.config.js — if nothing found, redirect to dashboard.
+    (function() {
+      function loadApp() {
+        var a = document.createElement('script'); a.src = 'js/app.js';
+        var t = document.createElement('script'); t.src = 'js/theme.js';
+        a.onload = function() { document.body.appendChild(t); };
+        document.body.appendChild(a);
+      }
+
+      function showNotFound(reason) {
+        console.warn('[Brandbook] No brand found —', reason, '— redirecting to dashboard');
+        window.location.replace('index.html');
+      }
+
+      var id = new URLSearchParams(location.search).get('id');
+      console.log('[Brandbook] boot — id from URL:', id);
+
+      // ── sessionStorage lookup ─────────────────────────────────────
+      function fromSession(matchId) {
+        try {
+          var pending = JSON.parse(sessionStorage.getItem('bb_pending_brand') || 'null');
+          if (pending && pending.id && (!matchId || pending.id === matchId)) {
+            console.log('[Brandbook] found bb_pending_brand id=%s name=%s', pending.id, pending.name);
+            sessionStorage.removeItem('bb_pending_brand');
+            return pending;
+          }
+          var last = JSON.parse(sessionStorage.getItem('bb_last_brand') || 'null');
+          if (last && last.id && (!matchId || last.id === matchId)) {
+            console.log('[Brandbook] found bb_last_brand id=%s name=%s', last.id, last.name);
+            return last;
+          }
+        } catch(e) { console.warn('[Brandbook] sessionStorage read error:', e); }
+        return null;
+      }
+
+      if (id) {
+        // 1. sessionStorage (fastest — set by intake.html and index.html before navigation)
+        var ss = fromSession(id);
+        if (ss) { window.BRAND = ss; console.log('[Brandbook] BRAND set from sessionStorage:', ss.name); loadApp(); return; }
+
+        // 2. localStorage
+        try {
+          var data = Projects.get(id);
+          if (data) {
+            console.log('[Brandbook] BRAND set from localStorage id=%s name=%s', data.id, data.name);
+            // Refresh sessionStorage for next visit
+            sessionStorage.setItem('bb_last_brand', JSON.stringify(data));
+            window.BRAND = data; loadApp(); return;
+          }
+        } catch(e) { console.warn('[Brandbook] localStorage read error:', e); }
+
+        // 3. Nothing found with this id — back to dashboard
+        showNotFound('id=' + id + ' not in sessionStorage or localStorage');
+        return;
+      }
+
+      // No ?id= in URL — try sessionStorage (catches stripped query strings)
+      var ss = fromSession(null);
+      if (ss) { window.BRAND = ss; console.log('[Brandbook] BRAND set from sessionStorage (no id):', ss.name); loadApp(); return; }
+
+      // No id, no session — redirect to dashboard
+      showNotFound('no ?id= in URL and no sessionStorage brand');
+    })();
+  </script>
+
+  <style>
+    .sidebar-back {
+      font-size: 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      line-height: 1;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .sidebar-back:hover { color: var(--brand-accent); }
+    #sidebar-brand-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+    }
+  </style>
+</body>
+</html>

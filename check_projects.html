@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Check Storage</title></head>
+<body>
+<pre id="output"></pre>
+<script>
+const out = document.getElementById('output');
+
+// Check localStorage
+const projects = localStorage.getItem('bb_projects');
+out.textContent = 'localStorage bb_projects:\n' + JSON.stringify(JSON.parse(projects || '[]'), null, 2) + '\n\n';
+
+// List all localStorage keys
+out.textContent += 'All localStorage keys:\n';
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  out.textContent += '  ' + key + '\n';
+}
+</script>
+</body>
+</html>

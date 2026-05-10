@@ -1,0 +1,972 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SWISS / INTERNATIONAL TYPOGRAPHIC STYLE — Brandbook v2
+   Applied via: body.swiss
+
+   Rules:
+   → One typeface (Manrope). Hierarchy through weight + size only.
+   → Zero border-radius. Every corner is 90°.
+   → No gradients. No box-shadows. No glow effects.
+   → 1px hairline rules as the only structural ornament.
+   → Oversized section numerals as compositional anchors.
+   → Left-aligned. Always. 8px base grid. Generous whitespace.
+   → Color: near-black + warm-white + one accent maximum.
+
+   References: Müller-Brockmann, Armin Hofmann, Emil Ruder, Vignelli
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────
+   1. TOKEN OVERRIDES
+   ────────────────────────────────────────────────────────────────── */
+body.swiss {
+  --bg-base:     #111110;
+  --bg-elevated: #1C1C1B;
+  --bg-card:     #1A1A19;
+  --sidebar-bg:  #0C0C0B;
+
+  /* Hairlines — more visible than the default rgba approach */
+  --border:        #252523;
+  --border-medium: #323230;
+  --border-strong: #4A4A47;
+
+  /* Type */
+  --text-primary:   #F4F3EF;
+  --text-secondary: #6B6B66;
+  --text-muted:     #3D3D39;
+
+  /* Single typeface — Manrope only */
+  --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  /* Swiss radius = 0 */
+  --r-sm: 0px;
+  --r-md: 0px;
+  --r-lg: 0px;
+  --r-xl: 0px;
+
+  /* Kill all shadows */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   2. PROGRESS BAR — hairline weight
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .progress-bar {
+  height: 1px;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   3. SIDEBAR — structured, type-led
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .sidebar {
+  border-right: 1px solid var(--border-strong);
+}
+
+body.swiss .sidebar-top {
+  border-bottom: 1px solid var(--border-medium);
+  padding: 32px 24px 24px;
+}
+
+body.swiss .sidebar-logo-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+body.swiss .nav-item {
+  border-radius: 0;
+  padding: 10px 24px;
+  border-left: 2px solid transparent;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+body.swiss .nav-item:hover {
+  background: rgba(255,255,255,0.03);
+  border-left-color: var(--border-strong);
+}
+
+body.swiss .nav-item.active {
+  background: transparent;
+  border-left-color: var(--brand-accent);
+}
+
+body.swiss .nav-item.active::before {
+  display: none; /* we use border-left instead */
+}
+
+body.swiss .nav-num {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+
+body.swiss .nav-item.active .nav-num,
+body.swiss .nav-item:hover .nav-num {
+  color: var(--brand-accent);
+}
+
+body.swiss .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body.swiss .sidebar-nav {
+  padding: 0;
+}
+
+body.swiss .sidebar-bottom {
+  border-top: 1px solid var(--border-medium);
+  padding: 16px 24px;
+}
+
+body.swiss .sidebar-year,
+body.swiss .sidebar-label,
+body.swiss .sidebar-sep {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   4. SECTION BASE — oversized numeral anchors
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .section {
+  border-bottom: 1px solid var(--border-medium);
+  padding: 96px 80px 96px 80px;
+  overflow: hidden;
+}
+
+/* Oversized number — background typographic anchor */
+body.swiss .section::before {
+  content: attr(data-num);
+  position: absolute;
+  top: 16px;
+  left: 64px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 220px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: var(--text-primary);
+  opacity: 0.035;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+body.swiss .section-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+}
+
+/* Section eyebrow — Swiss label style */
+body.swiss .section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+body.swiss .section-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--brand-accent);
+}
+
+body.swiss .section-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+/* Section title — Manrope 900 */
+body.swiss .section-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(36px, 4vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+body.swiss .section-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 560px;
+  margin-bottom: 64px;
+}
+
+/* Subsection titles */
+body.swiss .subsection-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  margin-top: 64px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   5. COVER — pure typographic, no effects
+   ────────────────────────────────────────────────────────────────── */
+body.swiss #section-cover::before {
+  display: none; /* no numeral on cover */
+}
+
+body.swiss #section-cover::after {
+  display: none;
+}
+
+body.swiss .cover-inner {
+  padding: 96px 80px;
+}
+
+body.swiss .cover-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  margin-bottom: 40px;
+}
+
+body.swiss .cover-brand-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.90;
+  color: var(--text-primary);
+  margin-bottom: 48px;
+}
+
+body.swiss .cover-tagline {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 420px;
+  margin-bottom: 64px;
+}
+
+body.swiss .cover-divider {
+  width: 32px;
+  height: 1px;         /* hairline */
+  background: var(--brand-accent);
+  margin-bottom: 48px;
+}
+
+body.swiss .cover-description {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 440px;
+  margin-bottom: 80px;
+}
+
+body.swiss .cover-meta {
+  gap: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-medium);
+}
+
+body.swiss .cover-meta-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+body.swiss .cover-meta-value {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   6. FOUNDATION — structured cards, sharp grid
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .foundation-card {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  padding: 32px;
+}
+
+body.swiss .foundation-card-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+body.swiss .foundation-card-body {
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+body.swiss .foundation-card-body.quote {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+/* Values — left-border accent, no radius */
+body.swiss .value-card {
+  border: 0;
+  border-left: 2px solid var(--border-medium);
+  border-radius: 0;
+  padding: 24px;
+  background: transparent;
+  transition: border-left-color 0.15s;
+}
+
+body.swiss .value-card:hover {
+  border-left-color: var(--brand-accent);
+}
+
+body.swiss .value-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+body.swiss .value-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* Personality table — strict table structure */
+body.swiss .personality-table {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .personality-header {
+  border-bottom: 1px solid var(--border-medium);
+  padding: 12px 24px;
+}
+
+body.swiss .personality-header span {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+body.swiss .personality-row {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.swiss .personality-row:last-child {
+  border-bottom: none;
+}
+
+body.swiss .personality-trait {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+body.swiss .personality-not {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   7. LOGO — grid, no dot pattern
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .logo-hero {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  background: var(--bg-card);
+}
+
+/* Replace dot grid with clean lines */
+body.swiss .logo-hero-dot-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+
+body.swiss .logo-hero-text {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+body.swiss .logo-variant {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .logo-variant-preview {
+  height: 160px;
+}
+
+body.swiss .logo-variant-info {
+  border-top: 1px solid var(--border-medium);
+}
+
+body.swiss .logo-variant-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body.swiss .logo-variant-desc {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+body.swiss .logo-rule-card {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .rule-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+body.swiss .badge {
+  border-radius: 0;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+body.swiss .rule-item {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+body.swiss .rule-item::before {
+  content: '—';
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+body.swiss .logo-spec-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+body.swiss .logo-spec-value {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   8. COLORS — rectangular swatches, strict structure
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .palette-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+body.swiss .color-swatch {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .swatch-chip {
+  height: 140px;  /* taller — more editorial */
+}
+
+body.swiss .swatch-body {
+  padding: 16px;
+  border-top: 1px solid var(--border-medium);
+}
+
+body.swiss .swatch-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+body.swiss .swatch-hex {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Manrope', monospace;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+body.swiss .swatch-rgb,
+body.swiss .swatch-usage {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+/* Ratio bar */
+body.swiss .color-ratios {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .ratios-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+body.swiss .ratio-bar {
+  gap: 1px;
+  height: 32px;
+  border-radius: 0;
+}
+
+body.swiss .ratio-segment {
+  border-radius: 0;
+}
+
+body.swiss .ratio-percent {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   9. TYPOGRAPHY — Inter specimens, precise scale
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .type-families {
+  gap: 1px; /* tight hairline gap */
+}
+
+body.swiss .type-family-card {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  padding: 40px;
+}
+
+body.swiss .type-family-role {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+body.swiss .type-specimen {
+  font-family: 'Manrope', sans-serif;
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+body.swiss .type-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+body.swiss .type-usage {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+
+body.swiss .weight-tag {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+}
+
+/* Type scale — strict table structure */
+body.swiss .type-scale-header {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+body.swiss .type-scale-row {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+}
+
+body.swiss .scale-meta-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+body.swiss .scale-meta-spec {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-family: 'Manrope', monospace;
+}
+
+body.swiss .scale-sample {
+  font-family: 'Manrope', sans-serif;
+  color: var(--text-primary);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   10. IMAGERY — editorial, no radius
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .imagery-style-card {
+  border: 0;
+  border-left: 2px solid var(--brand-accent);
+  border-radius: 0;
+  padding: 32px 40px;
+  background: transparent;
+}
+
+body.swiss .imagery-quote {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+body.swiss .keyword-tag {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  color: var(--text-secondary);
+  background: transparent;
+}
+
+body.swiss .imagery-rule-card {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .imagery-rule-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+body.swiss .imagery-cell {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .imagery-placeholder-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   11. VOICE & TONE — structured, tabular
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .voice-intro {
+  border: 0;
+  border-left: 2px solid var(--brand-accent);
+  border-radius: 0;
+  padding: 32px 40px;
+  background: transparent;
+}
+
+body.swiss .voice-intro-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+body.swiss .voice-attr-card {
+  border: 0;
+  border-top: 1px solid var(--border-medium);
+  border-radius: 0;
+  padding: 32px 0;
+  background: transparent;
+}
+
+body.swiss .voice-attr-card:first-child {
+  border-top: none;
+}
+
+body.swiss .voice-attributes {
+  display: block; /* stack rather than grid */
+  border: 1px solid var(--border-medium);
+  padding: 0 32px;
+  margin-bottom: 48px;
+}
+
+body.swiss .voice-attr-trait {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  margin-bottom: 8px;
+}
+
+body.swiss .voice-attr-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  max-width: 560px;
+}
+
+body.swiss .voice-example {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  font-style: normal;
+  font-family: 'Manrope', monospace;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border-strong);
+  border-radius: 0;
+}
+
+/* We Are / Not — two-column table */
+body.swiss .voice-weare {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+}
+
+body.swiss .voice-weare > div:first-child,
+body.swiss .voice-weare > div:last-child {
+  padding: 32px;
+}
+
+body.swiss .weare-divider {
+  background: var(--border-medium);
+}
+
+body.swiss .weare-col-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.swiss .weare-item {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+body.swiss .weare-item:last-child {
+  border-bottom: none;
+}
+
+/* Channel tones — strict table rows */
+body.swiss .channel-row {
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  padding: 16px 0;
+}
+
+body.swiss .channel-row:first-child {
+  border-top: 1px solid var(--border-medium);
+}
+
+body.swiss .channel-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+body.swiss .channel-tone {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--brand-accent);
+}
+
+body.swiss .channel-example {
+  font-size: 12px;
+  font-style: normal;
+  font-family: 'Manrope', monospace;
+  color: var(--text-muted);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   12. APPLICATIONS — rectangular cards, no hover lift
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .app-card {
+  border: 1px solid var(--border-medium);
+  border-radius: 0;
+}
+
+body.swiss .app-card:hover {
+  transform: none;
+  border-color: var(--brand-accent);
+}
+
+body.swiss .app-preview {
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+body.swiss .app-info {
+  padding: 20px;
+}
+
+body.swiss .app-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+body.swiss .app-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   13. THEME SWITCHER — sidebar bottom
+   ────────────────────────────────────────────────────────────────── */
+.theme-switcher {
+  display: flex;
+  gap: 1px;
+  padding: 12px 24px;
+  border-top: 1px solid var(--border-medium);
+}
+
+.theme-btn {
+  flex: 1;
+  height: 28px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-medium);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.theme-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: rgba(255,255,255,0.04);
+}
+
+.theme-btn.active {
+  background: var(--brand-accent);
+  border-color: var(--brand-accent);
+  color: #fff;
+}
+
+.theme-btn-icon {
+  font-size: 10px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   14. SECTION ALTERNATION — every other section shifts surface
+   ────────────────────────────────────────────────────────────────── */
+body.swiss .section:nth-child(even) {
+  background: #161615;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   15. REDUCED MOTION
+   ────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body.swiss * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

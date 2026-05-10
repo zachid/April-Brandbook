@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Intake — Brandbook Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:        #111110;
+      --bg-card:   #1A1A19;
+      --bg-input:  #1F1F1E;
+      --border:    #252523;
+      --border-md: #323230;
+      --border-hi: #4A4A47;
+      --text:      #F4F3EF;
+      --text-2:    #6B6B66;
+      --text-3:    #3D3D39;
+      --accent:    #8B5CF6;
+      --accent-2:  #06B6D4;
+      --success:   #10B981;
+      --error:     #EF4444;
+      --r:         0px;
+    }
+
+    body {
+      font-family: 'Manrope', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 24px 48px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .header-sep {
+      width: 1px; height: 18px;
+      background: var(--border-md);
+    }
+
+    .header-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .header-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.15s;
+    }
+    .header-link:hover { color: var(--text); }
+
+    /* ── Main layout ── */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    /* ── Left panel — upload ── */
+    .panel-upload {
+      padding: 48px;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .panel-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .panel-subtitle {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+
+    /* API key */
+    .api-key-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    .api-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-md);
+      border-radius: var(--r);
+      padding: 12px 14px;
+      font-family: 'Manrope', monospace;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .api-input:focus { border-color: var(--accent); }
+    .api-input::placeholder { color: var(--text-3); }
+
+    /* Source tabs */
+    .source-tabs {
+      display: flex;
+      gap: 1px;
+      background: var(--border-md); /* gap = hairline */
+      border: 1px solid var(--border-md);
+      padding: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      height: 34px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover { color: var(--text-2); background: rgba(255,255,255,0.04); }
+    .tab-btn.active { background: var(--bg-card); color: var(--text); border: none; }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 1px dashed var(--border-md);
+      border-radius: var(--r);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(139,92,246,0.04);
+    }
+
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+
+    .upload-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .upload-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .upload-file-name {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Text input zone */
+    .text-area {
+      width: 100%;
+      min-height: 200px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-md);
+      border-radius: var(--r);
+      padding: 16px;
+      font-family: 'Manrope', monospace;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.15s;
+      line-height: 1.6;
+    }
+    .text-area:focus { border-color: var(--accent); }
+    .text-area::placeholder { color: var(--text-3); }
+
+    /* URL input */
+    .url-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .url-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-md);
+      border-radius: var(--r);
+      padding: 12px 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .url-input:focus { border-color: var(--accent); }
+    .url-input::placeholder { color: var(--text-3); }
+
+    /* Context note */
+    .context-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .context-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 12px 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .context-input:focus { border-color: var(--accent); }
+    .context-input::placeholder { color: var(--text-3); }
+
+    /* Extract button */
+    .btn-extract {
+      width: 100%;
+      height: 52px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--r);
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.01em;
+    }
+    .btn-extract:hover:not(:disabled) { background: #7C3AED; }
+    .btn-extract:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-extract .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    .btn-extract.loading .spinner { display: block; }
+    .btn-extract.loading .btn-label { opacity: 0.7; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Right panel — output ── */
+    .panel-output {
+      background: var(--bg-card);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output-header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg-card);
+      z-index: 10;
+    }
+
+    .output-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.02em;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border-md);
+      background: transparent;
+      color: var(--text-2);
+    }
+    .btn-outline:hover { border-color: var(--border-hi); color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .btn-primary {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #7C3AED; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Output states */
+    .output-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      text-align: center;
+      color: var(--text-3);
+      gap: 16px;
+    }
+
+    .output-empty-icon { font-size: 48px; opacity: 0.4; }
+
+    .output-empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .output-empty-desc {
+      font-size: 13px;
+      color: var(--text-3);
+      max-width: 280px;
+      line-height: 1.65;
+    }
+
+    /* Styleboard preview */
+    .styleboard {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ── Assets upload panel ── */
+    #assets-panel {
+      padding: 24px 32px;
+      border-top: 1px solid var(--border);
+    }
+    .assets-panel-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .assets-panel-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .assets-panel-hint {
+      font-size: 11px;
+      color: var(--text-3);
+    }
+    .assets-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .asset-slot-wide { grid-column: span 2; }
+    .asset-slot-label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .asset-drop-zone {
+      position: relative;
+      height: 80px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color .15s;
+      background: var(--bg);
+    }
+    .asset-drop-zone:hover { border-color: var(--accent); }
+    .asset-file-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    .asset-drop-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      pointer-events: none;
+    }
+    .asset-drop-icon { font-size: 18px; color: var(--text-3); line-height: 1; }
+    .asset-drop-text { font-size: 10px; color: var(--text-3); }
+    .asset-preview {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: inherit;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .asset-preview img {
+      max-height: 60px;
+      max-width: 90%;
+      object-fit: contain;
+    }
+    .asset-preview-photos {
+      gap: 4px;
+      flex-wrap: wrap;
+      padding: 4px;
+    }
+    .asset-preview-photos img {
+      height: 36px;
+      width: 36px;
+      object-fit: cover;
+    }
+    /* Save status bar */
+    .save-status-bar {
+      padding: 12px 32px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-2);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .save-status-bar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    @media (max-width: 700px) {
+      .assets-grid { grid-template-columns: 1fr 1fr; }
+      .asset-slot-wide { grid-column: span 2; }
+    }
+
+    /* Brand header card */
+    .sb-brand-card {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 0;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sb-brand-card::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: -10%;
+      width: 50%; height: 80%;
+      background: radial-gradient(ellipse, rgba(139,92,246,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .sb-brand-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: var(--text);
+      position: relative;
+    }
+
+    .sb-tagline {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-top: 8px;
+      position: relative;
+    }
+
+    /* Sections */
+    .sb-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sb-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Color swatches */
+    .sb-swatches {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .sb-swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sb-swatch-chip {
+      width: 48px; height: 48px;
+      border-radius: 0;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sb-swatch-name {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .sb-swatch-hex {
+      font-size: 9px;
+      color: var(--text-3);
+      text-align: center;
+      font-family: monospace;
+    }
+
+    /* Type specimens */
+    .sb-type-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .sb-type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-type-meta {
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+
+    .sb-type-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-2);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .sb-type-spec {
+      font-size: 9px;
+      color: var(--text-3);
+      margin-top: 1px;
+      font-family: monospace;
+    }
+
+    .sb-type-sample {
+      color: var(--text);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* Values */
+    .sb-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .sb-value-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border: 1px solid var(--border-md);
+      border-radius: 0;
+      color: var(--text-2);
+    }
+
+    /* Error */
+    .error-banner {
+      background: rgba(239,68,68,0.10);
+      border: 1px solid rgba(239,68,68,0.30);
+      border-left: 3px solid #EF4444;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #EF4444;
+      line-height: 1.5;
+    }
+
+    /* Config code */
+    .config-output {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-2);
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.6;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    /* ── Steps ── */
+    .steps-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 12px 48px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+    }
+
+    .step.active { color: var(--text); }
+    .step.done   { color: var(--success); }
+
+    .step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin: 0 12px;
+    }
+
+    /* ── Model selector ─────────────────────────────────── */
+    .model-selector { display: flex; flex-direction: column; gap: 8px; }
+
+    .model-select-wrap { position: relative; }
+
+    .model-select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-md);
+      border-radius: 0;
+      padding: 11px 36px 11px 12px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.12s;
+    }
+
+    .model-select:focus { border-color: var(--accent); }
+
+    /* Custom chevron */
+    .model-select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .model-select option { background: #1A1A19; color: #F4F3EF; }
+    body.light .model-select option { background: #fff; color: #111110; }
+
+    .model-no-keys {
+      font-size: 12px;
+      color: var(--text-3);
+      padding: 10px 12px;
+      border: 1px solid var(--border-md);
+      background: var(--bg-input);
+    }
+
+    .model-no-keys a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── Multi-file list ─────────────────────────────────── */
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-top: 8px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      font-size: 11px;
+    }
+
+    .file-item-name {
+      font-weight: 600;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+
+    .file-item-size {
+      font-size: 10px;
+      color: var(--text-3);
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .file-item-remove {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0 4px;
+      flex-shrink: 0;
+      transition: color 0.12s;
+    }
+
+    .file-item-remove:hover { color: #EF4444; }
+
+    /* ── Light mode ─────────────────────────────────────── */
+    body.light {
+      --bg:        #F2F2EF;
+      --bg-card:   #FFFFFF;
+      --bg-input:  #F8F8F5;
+      --border:    rgba(0,0,0,0.07);
+      --border-md: rgba(0,0,0,0.12);
+      --border-hi: rgba(0,0,0,0.22);
+      --text:      #111110;
+      --text-2:    rgba(17,17,16,0.55);
+      --text-3:    rgba(17,17,16,0.30);
+    }
+
+    /* ── Error banner — always sticky at top of panel ───── */
+    .error-banner {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Apply theme immediately — no flash -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('bb-theme') || 'dark';
+      if (t === 'light') document.body.classList.add('light');
+      // Sync in real-time when dashboard changes theme or settings in another tab
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'bb-theme') {
+          document.body.classList.toggle('light', e.newValue === 'light');
+        }
+        if (e.key === 'bb-settings') {
+          // Rebuild model selector if keys changed
+          if (typeof buildModelSelector === 'function') buildModelSelector();
+        }
+      });
+    })();
+  </script>
+
+  <header class="header">
+    <div class="header-brand">
+      <span class="header-logo">Brandbook</span>
+      <div class="header-sep"></div>
+      <span class="header-title">Brand Intake & Extractor</span>
+    </div>
+    <a href="index.html" class="header-link">← All Brands</a>
+  </header>
+
+  <div class="steps-row" id="steps-row">
+    <div class="step active" id="step-1">
+      <div class="step-num">1</div>
+      <span>Add Source</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step-2">
+      <div class="step-num">2</div>
+      <span>Extracting…</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step-3">
+      <div class="step-num">3</div>
+      <span>Review</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step-4">
+      <div class="step-num">4</div>
+      <span>Open Brandbook</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- LEFT: Upload panel -->
+    <div class="panel-upload">
+      <div>
+        <h1 class="panel-title">Create a new<br>brand</h1>
+        <p class="panel-subtitle">Upload a PDF, paste HTML/CSS, or share a Figma URL. Your chosen AI model will extract colors, typography, voice, and more.</p>
+      </div>
+
+      <!-- Brand Name -->
+      <div class="api-key-row">
+        <label class="field-label" for="brand-name-input">Brand Name</label>
+        <input type="text" id="brand-name-input" class="api-input" placeholder="e.g. Acme, AURA, Nike…" autocomplete="off" style="font-family:'Manrope',sans-serif">
+        <span class="field-hint">You can rename this after — it's just for your dashboard.</span>
+      </div>
+
+      <!-- Model selector -->
+      <div class="model-selector">
+        <label class="field-label" for="model-select">Extraction Model</label>
+        <div id="model-selector-body"><!-- injected by JS --></div>
+      </div>
+
+      <!-- Source type tabs -->
+      <div>
+        <div class="field-label" style="margin-bottom:10px">Source Type</div>
+        <div class="source-tabs">
+          <button class="tab-btn active" data-tab="file">📄 File / PDF</button>
+          <button class="tab-btn" data-tab="paste">✏️ Paste</button>
+          <button class="tab-btn" data-tab="figma">🎨 Figma</button>
+        </div>
+      </div>
+
+      <!-- File upload tab -->
+      <div id="tab-file">
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="file-input" accept=".pdf,.html,.htm,.css,.txt,.png,.jpg,.jpeg,.webp" multiple>
+          <span class="upload-icon">⬆</span>
+          <div class="upload-label">Drop files here or click to browse</div>
+          <div class="upload-hint">Multiple files supported — PDF, HTML, CSS, image</div>
+        </div>
+        <div class="file-list" id="file-list"></div>
+      </div>
+
+      <!-- Paste tab -->
+      <div id="tab-paste" style="display:none">
+        <div class="field-label" style="margin-bottom:8px">Paste brand content</div>
+        <textarea id="paste-input" class="text-area" placeholder="Paste CSS variables, brand guidelines text, color specs, font names, or any brand documentation…"></textarea>
+      </div>
+
+      <!-- Figma tab -->
+      <div id="tab-figma" style="display:none">
+        <div class="field-label" style="margin-bottom:8px">Figma file or frame URL</div>
+        <div class="url-row">
+          <input type="url" id="figma-url" class="url-input" placeholder="https://www.figma.com/file/…">
+        </div>
+        <p class="field-hint" style="margin-top:8px">Share → Copy link. The file must be publicly viewable or you need a Figma token.</p>
+
+        <div style="margin-top:16px">
+          <div class="field-label" style="margin-bottom:8px">Figma Access Token (optional)</div>
+          <input type="password" id="figma-token" class="api-input" placeholder="figd_…">
+          <span class="field-hint">From Figma → Account Settings → Access Tokens</span>
+        </div>
+      </div>
+
+      <!-- Context note -->
+      <div class="context-field">
+        <label class="field-label" for="context-note">Context hint (optional)</label>
+        <input type="text" id="context-note" class="context-input" placeholder="e.g. 'SaaS startup, premium dark-mode, tech-forward'">
+        <span class="field-hint">Helps Claude understand your brand positioning</span>
+      </div>
+
+      <!-- Error display -->
+      <div id="error-banner" class="error-banner" style="display:none"></div>
+
+      <!-- Extract button -->
+      <button class="btn-extract" id="btn-extract">
+        <div class="spinner"></div>
+        <span class="btn-label">Extract Brand Tokens</span>
+      </button>
+
+    </div>
+
+    <!-- RIGHT: Output panel -->
+    <div class="panel-output">
+
+      <div class="output-header">
+        <span class="output-title" id="output-title">Waiting for input</span>
+        <div class="output-actions">
+          <button class="btn-sm btn-outline" id="btn-copy" disabled>Copy Config</button>
+          <button class="btn-sm btn-primary" id="btn-apply" disabled>Apply to Brandbook →</button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="output-empty" id="output-empty">
+        <div class="output-empty-icon">◎</div>
+        <div class="output-empty-title">No brand extracted yet</div>
+        <div class="output-empty-desc">Upload a PDF, paste your brand CSS, or enter a Figma URL — AI will extract your full brand token set.</div>
+      </div>
+
+      <!-- Styleboard (hidden until extraction) -->
+      <div class="styleboard" id="styleboard" style="display:none">
+        <!-- injected by JS -->
+      </div>
+
+      <!-- Assets upload (shown after extraction) -->
+      <div id="assets-panel" style="display:none">
+        <div class="assets-panel-header">
+          <span class="assets-panel-title">Upload Brand Assets</span>
+          <span class="assets-panel-hint">Optional — logos stored directly in the brandbook</span>
+        </div>
+        <div class="assets-grid">
+          <div class="asset-slot" id="slot-logo-primary">
+            <label class="asset-slot-label">Logo — Dark bg</label>
+            <div class="asset-drop-zone" id="drop-logo-primary">
+              <input type="file" class="asset-file-input" id="file-logo-primary" accept="image/*,.svg">
+              <div class="asset-drop-inner">
+                <div class="asset-drop-icon">+</div>
+                <div class="asset-drop-text">SVG / PNG</div>
+              </div>
+              <div class="asset-preview" id="preview-logo-primary" style="display:none"></div>
+            </div>
+          </div>
+          <div class="asset-slot" id="slot-logo-white">
+            <label class="asset-slot-label">Logo — Light bg</label>
+            <div class="asset-drop-zone" id="drop-logo-white" style="background:#F5F5F0">
+              <input type="file" class="asset-file-input" id="file-logo-white" accept="image/*,.svg">
+              <div class="asset-drop-inner">
+                <div class="asset-drop-icon" style="color:#888">+</div>
+                <div class="asset-drop-text" style="color:#888">SVG / PNG</div>
+              </div>
+              <div class="asset-preview" id="preview-logo-white" style="display:none"></div>
+            </div>
+          </div>
+          <div class="asset-slot" id="slot-logo-icon">
+            <label class="asset-slot-label">Icon / Mark</label>
+            <div class="asset-drop-zone" id="drop-logo-icon">
+              <input type="file" class="asset-file-input" id="file-logo-icon" accept="image/*,.svg">
+              <div class="asset-drop-inner">
+                <div class="asset-drop-icon">+</div>
+                <div class="asset-drop-text">SVG / PNG</div>
+              </div>
+              <div class="asset-preview" id="preview-logo-icon" style="display:none"></div>
+            </div>
+          </div>
+          <div class="asset-slot asset-slot-wide" id="slot-brand-photos">
+            <label class="asset-slot-label">Brand Photos (up to 4)</label>
+            <div class="asset-drop-zone" id="drop-brand-photos">
+              <input type="file" class="asset-file-input" id="file-brand-photos" accept="image/*" multiple>
+              <div class="asset-drop-inner">
+                <div class="asset-drop-icon">+</div>
+                <div class="asset-drop-text">JPG / PNG / WebP</div>
+              </div>
+              <div class="asset-preview asset-preview-photos" id="preview-brand-photos" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save status / redirect fallback -->
+      <div id="save-status" style="display:none" class="save-status-bar">
+        <span id="save-status-text"></span>
+        <a id="save-status-link" href="#" style="display:none">Open Brandbook →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/projects.js"></script>
+  <script>
+  (function() {
+    'use strict';
+
+    // ── State ─────────────────────────────────
+    let currentTab    = 'file';
+    let uploadedFiles = [];   // array — supports multiple
+    let extractedData = null;
+    let selectedModel = null; // { id, provider, label }
+
+    // ── Edit mode — check for ?id= param ──────
+    const _editId = new URLSearchParams(location.search).get('id');
+    const _editProject = _editId ? Projects.get(_editId) : null;
+    if (_editProject) {
+      // Pre-fill brand name
+      document.addEventListener('DOMContentLoaded', () => {
+        const nameField = document.getElementById('brand-name-input');
+        if (nameField && !nameField.value) nameField.value = _editProject.name || '';
+        // Update page heading
+        const heading = document.querySelector('.panel-title');
+        if (heading) heading.innerHTML = `Update<br>${_editProject.name}`;
+        const subhead = document.querySelector('.panel-subtitle');
+        if (subhead) subhead.textContent = 'Upload new assets to re-extract and update the brand tokens.';
+        document.getElementById('btn-apply').textContent = 'Update Brandbook →';
+      });
+    }
+
+    // ── Settings helper ───────────────────────
+    function getSettings() {
+      try { return JSON.parse(localStorage.getItem('bb-settings') || '{}'); }
+      catch { return {}; }
+    }
+
+    // ── Model definitions ─────────────────────
+    const MODELS = [
+      { provider: 'claude', id: 'claude-opus-4-5',           label: 'Claude Opus 4.5',   note: 'Most capable' },
+      { provider: 'claude', id: 'claude-sonnet-4-5',         label: 'Claude Sonnet 4.5', note: 'Recommended' },
+      { provider: 'claude', id: 'claude-3-5-haiku-20241022', label: 'Claude Haiku 3.5',  note: 'Fastest' },
+      { provider: 'openai', id: 'gpt-5.4',                   label: 'GPT-5.4',           note: 'Latest' },
+      { provider: 'openai', id: 'gpt-5.2',                   label: 'GPT-5.2',           note: 'Stable' },
+      { provider: 'openai', id: 'gpt-4o',                    label: 'GPT-4o',            note: 'Fallback' },
+    ];
+
+    // ── Build model dropdown ──────────────────
+    function buildModelSelector() {
+      const s    = getSettings();
+      const body = document.getElementById('model-selector-body');
+      const hasKeys = { claude: !!s.claudeKey, openai: !!s.openaiKey };
+
+      if (!hasKeys.claude && !hasKeys.openai) {
+        body.innerHTML = `<div class="model-no-keys">No API keys saved. <a href="index.html">Add keys in Settings →</a></div>`;
+        selectedModel = null;
+        return;
+      }
+
+      // Build grouped <select>
+      let optGroups = '';
+      const groups  = { claude: 'Anthropic Claude', openai: 'OpenAI' };
+
+      for (const [provider, label] of Object.entries(groups)) {
+        if (!hasKeys[provider]) continue;
+        const opts = MODELS
+          .filter(m => m.provider === provider)
+          .map(m => `<option value="${m.provider}|${m.id}">${m.label} — ${m.note}</option>`)
+          .join('');
+        optGroups += `<optgroup label="${label}">${opts}</optgroup>`;
+      }
+
+      body.innerHTML = `
+        <div class="model-select-wrap">
+          <select id="model-select" class="model-select">${optGroups}</select>
+        </div>`;
+
+      const sel = document.getElementById('model-select');
+
+      // Default: first Claude model if available, else first overall
+      const defaultM = MODELS.find(m => hasKeys[m.provider]);
+      if (defaultM) sel.value = `${defaultM.provider}|${defaultM.id}`;
+
+      applySelectModel(sel.value);
+      sel.addEventListener('change', () => applySelectModel(sel.value));
+    }
+
+    function applySelectModel(value) {
+      const [provider, id] = value.split('|');
+      selectedModel = MODELS.find(m => m.provider === provider && m.id === id) || null;
+    }
+
+    buildModelSelector();
+
+    // ── Tab switching ─────────────────────────
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentTab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        ['file','paste','figma'].forEach(t => {
+          document.getElementById(`tab-${t}`).style.display = t === currentTab ? 'block' : 'none';
+        });
+      });
+    });
+
+    // ── Multi-file upload ─────────────────────
+    const fileInput  = document.getElementById('file-input');
+    const uploadZone = document.getElementById('upload-zone');
+
+    function addFiles(newFiles) {
+      [...newFiles].forEach(f => {
+        // Deduplicate by name
+        if (!uploadedFiles.find(x => x.name === f.name && x.size === f.size)) {
+          uploadedFiles.push(f);
+        }
+      });
+      renderFileList();
+      // Reset the input so same file can be re-added after removal
+      fileInput.value = '';
+    }
+
+    function removeFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFileList();
+    }
+
+    function renderFileList() {
+      const list = document.getElementById('file-list');
+      if (!uploadedFiles.length) { list.innerHTML = ''; return; }
+      list.innerHTML = uploadedFiles.map((f, i) => `
+        <div class="file-item">
+          <span class="file-item-name" title="${f.name}">${f.name}</span>
+          <span class="file-item-size">${formatBytes(f.size)}</span>
+          <button class="file-item-remove" data-i="${i}" title="Remove">✕</button>
+        </div>`).join('');
+      list.querySelectorAll('.file-item-remove').forEach(btn => {
+        btn.addEventListener('click', () => removeFile(+btn.dataset.i));
+      });
+    }
+
+    function formatBytes(b) {
+      if (b < 1024)     return `${b} B`;
+      if (b < 1048576)  return `${(b/1024).toFixed(0)} KB`;
+      return `${(b/1048576).toFixed(1)} MB`;
+    }
+
+    fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+    uploadZone.addEventListener('dragover',  e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', ()  => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      addFiles(e.dataTransfer.files);
+    });
+
+    // ── Extract ───────────────────────────────
+    document.getElementById('btn-extract').addEventListener('click', extract);
+
+    async function extract() {
+      if (!selectedModel) {
+        showError('Select an extraction model above.');
+        return;
+      }
+
+      const s = getSettings();
+      const apiKey = selectedModel.provider === 'claude' ? s.claudeKey : s.openaiKey;
+      if (!apiKey) {
+        showError(`No ${selectedModel.provider === 'claude' ? 'Claude (Anthropic)' : 'OpenAI'} API key found. Add it in Settings on the dashboard.`);
+        return;
+      }
+
+      const btn = document.getElementById('btn-extract');
+      const btnLabel = btn.querySelector('.btn-label');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      hideError();
+      setStep(2);
+
+      try {
+        btnLabel.textContent = 'Reading file…';
+        const content = await buildContent();
+
+
+        btnLabel.textContent = `Extracting with ${selectedModel.label}…`;
+        const result = selectedModel.provider === 'claude'
+          ? await callClaude(apiKey, selectedModel.id, content)
+          : await callOpenAI(apiKey, selectedModel.id, content);
+
+        extractedData = parseResult(result);
+        renderStyleboard(extractedData);
+        setStep(3);
+        // Pre-fill brand name field if user hasn't typed one
+        const nameField = document.getElementById('brand-name-input');
+        if (!nameField.value.trim() && extractedData.name) {
+          nameField.value = extractedData.name;
+        }
+      } catch (err) {
+        showError(err.message || 'Extraction failed. Check your API key and try again.');
+        setStep(1);
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btnLabel.textContent = 'Extract Brand Tokens';
+      }
+    }
+
+    async function buildContent() {
+      if (currentTab === 'paste') {
+        const text = document.getElementById('paste-input').value.trim();
+        if (!text) throw new Error('Paste some brand content first.');
+        return [{ type: 'text', text: `Brand document content:\n\n${text}` }];
+      }
+
+      if (currentTab === 'figma') {
+        const url = document.getElementById('figma-url').value.trim();
+        if (!url) throw new Error('Enter a Figma URL first.');
+        return [{ type: 'text', text: `Figma URL to analyze: ${url}\n\nExtract brand tokens from this Figma file URL. If you cannot access the file directly, extract what you can from the URL structure and provide best-guess brand tokens based on typical design systems.` }];
+      }
+
+      // File upload — one or many
+      if (!uploadedFiles.length) throw new Error('Add at least one file to upload.');
+
+      // Read all files in parallel, then flatten into a content array
+      const parts = await Promise.all(uploadedFiles.map(readFile));
+      return parts.flat();
+    }
+
+    function readFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader  = new FileReader();
+        const isImage = file.type.startsWith('image/');
+        const isPDF   = file.type === 'application/pdf'
+                     || file.name.toLowerCase().endsWith('.pdf');
+
+        if (isImage) {
+          reader.onload = e => {
+            const base64 = e.target.result.split(',')[1];
+            resolve([{ type: 'image', source: { type: 'base64', media_type: file.type, data: base64 } }]);
+          };
+          reader.readAsDataURL(file);
+
+        } else if (isPDF) {
+          reader.onload = e => {
+            const base64 = e.target.result.split(',')[1];
+            resolve([{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }]);
+          };
+          reader.readAsDataURL(file);
+
+        } else {
+          // HTML / CSS / TXT
+          reader.onload = e => {
+            const text = e.target.result;
+            if (!text || text.trim().length < 10) {
+              resolve([]); // skip empty files silently
+            } else {
+              resolve([{ type: 'text', text: `--- File: ${file.name} ---\n\n${text}` }]);
+            }
+          };
+          reader.readAsText(file);
+        }
+
+        reader.onerror = () => reject(new Error(`Could not read "${file.name}".`));
+      });
+    }
+
+    // Shared system prompt
+    const SYSTEM_PROMPT = `You are a brand token extraction specialist. Analyze brand documents, design files, CSS, and imagery to extract structured brand guidelines.
+
+Return ONLY a valid JSON object — no markdown, no explanation, no code fences. Use this exact structure:
+
+{
+  "name": "Brand Name",
+  "tagline": "Tagline or slogan",
+  "year": "2025",
+  "description": "One sentence brand description",
+  "accentColor": "#HEXVAL",
+  "accentColor2": "#HEXVAL",
+  "story": {
+    "narrative": "2-3 sentence brand origin or story paragraph",
+    "strategy": "Core brand strategy statement — what the brand does and why it matters",
+    "vision": "Long-term vision statement",
+    "mission": "Current mission statement"
+  },
+  "foundation": {
+    "mission": "Mission statement",
+    "vision": "Vision statement",
+    "audience": "Target audience description",
+    "values": [{ "name": "Value", "description": "Description" }],
+    "personality": [{ "trait": "Trait", "not": "Opposite" }]
+  },
+  "colors": {
+    "primary": [{ "name": "Name", "hex": "#HEX", "usage": "Usage" }],
+    "secondary": [{ "name": "Name", "hex": "#HEX", "usage": "Usage" }],
+    "functional": [{ "name": "Success", "hex": "#10B981", "usage": "Positive states" }]
+  },
+  "typography": {
+    "display": { "name": "FontName", "weights": ["Regular 400", "Bold 700"], "usage": "Headlines" },
+    "body": { "name": "FontName", "weights": ["Regular 400", "Medium 500"], "usage": "Body copy" },
+    "conventions": [
+      { "name": "Hero Display", "font": "display", "size": "80px", "sizeMobile": "40px", "weight": "900", "leading": "0.95", "tracking": "-0.04em", "transform": "none", "usage": "Hero headings" },
+      { "name": "Body", "font": "body", "size": "16px", "sizeMobile": "16px", "weight": "400", "leading": "1.65", "tracking": "0", "transform": "none", "usage": "Body copy" }
+    ]
+  },
+  "voice": {
+    "description": "Voice description",
+    "attributes": [{ "trait": "Trait", "description": "Description", "example": "Example" }],
+    "weare": ["Clear", "Warm"],
+    "werenot": ["Clinical", "Verbose"],
+    "channelTones": [{ "channel": "Product UI", "tone": "Clear", "example": "Done." }]
+  }
+}
+
+If a field cannot be determined from the source, make a reasonable inference based on the brand context. Always return complete, valid JSON.`;
+
+    async function callClaude(apiKey, modelId, contentParts) {
+      const context    = document.getElementById('context-note').value.trim();
+      const userMessage = context
+        ? `Context: ${context}\n\nAnalyze this brand material and extract all brand tokens:`
+        : 'Analyze this brand material and extract all brand tokens:';
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'anthropic-beta': 'pdfs-2024-09-25',
+        },
+        body: JSON.stringify({
+          model: modelId,
+          max_tokens: 4096,
+          system: SYSTEM_PROMPT,
+          messages: [{
+            role: 'user',
+            content: [
+              ...contentParts,
+              { type: 'text', text: userMessage }
+            ]
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || `Claude API error ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.content?.[0]?.text || '';
+    }
+
+    async function callOpenAI(apiKey, modelId, contentParts) {
+      const context     = document.getElementById('context-note').value.trim();
+      const userMessage = context
+        ? `Context: ${context}\n\nAnalyze this brand material and extract all brand tokens:`
+        : 'Analyze this brand material and extract all brand tokens:';
+
+      // Convert Anthropic-style content blocks to OpenAI format
+      const openAIContent = contentParts.map(c => {
+        if (c.type === 'image') {
+          return {
+            type: 'image_url',
+            image_url: { url: `data:${c.source.media_type};base64,${c.source.data}` }
+          };
+        }
+        // PDFs: Anthropic uses type:'document'; OpenAI uses type:'file' with inline base64
+        if (c.type === 'document' && c.source?.type === 'base64') {
+          return {
+            type: 'file',
+            file: {
+              filename: 'document.pdf',
+              file_data: `data:application/pdf;base64,${c.source.data}`
+            }
+          };
+        }
+        return { type: 'text', text: c.text || '' };
+      });
+
+      openAIContent.push({ type: 'text', text: userMessage });
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: modelId,
+          // GPT-5.x and o-series use max_completion_tokens; legacy models use max_tokens
+          ...(modelId.startsWith('gpt-5') || modelId.startsWith('o')
+            ? { max_completion_tokens: 4096 }
+            : { max_tokens: 4096 }),
+          messages: [
+            { role: 'system',    content: SYSTEM_PROMPT },
+            { role: 'user',      content: openAIContent }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || `OpenAI API error ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices?.[0]?.message?.content || '';
+    }
+
+    function parseResult(raw) {
+      // Strip code fences if present
+      let json = raw.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '');
+      try {
+        return JSON.parse(json);
+      } catch(e) {
+        // Try to find the JSON object
+        const match = json.match(/\{[\s\S]*\}/);
+        if (match) return JSON.parse(match[0]);
+        throw new Error('Could not parse Claude\'s response as JSON. Try again.');
+      }
+    }
+
+    // ── Styleboard render ─────────────────────
+    function renderStyleboard(d) {
+      const sb = document.getElementById('styleboard');
+      const allColors = [
+        ...(d.colors?.primary   || []),
+        ...(d.colors?.secondary || []),
+      ];
+
+      const typeConventions = d.typography?.conventions || [];
+      const displayFont = d.typography?.display?.name || 'Syne';
+      const bodyFont    = d.typography?.body?.name    || 'Inter';
+
+      sb.innerHTML = `
+        <div class="sb-brand-card" style="--acc:${d.accentColor || '#8B5CF6'}">
+          <div class="sb-brand-name" style="color:${d.accentColor || '#8B5CF6'}">${d.name || 'Brand'}</div>
+          <div class="sb-tagline">${d.tagline || ''}</div>
+        </div>
+
+        ${allColors.length ? `
+        <div class="sb-section">
+          <div class="sb-section-label">Colors extracted (${allColors.length})</div>
+          <div class="sb-swatches">
+            ${allColors.map(c => `
+              <div class="sb-swatch">
+                <div class="sb-swatch-chip" style="background:${c.hex}"></div>
+                <div class="sb-swatch-name">${c.name}</div>
+                <div class="sb-swatch-hex">${c.hex}</div>
+              </div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        ${typeConventions.length ? `
+        <div class="sb-section">
+          <div class="sb-section-label">Type conventions (${typeConventions.length})</div>
+          <div class="sb-type-rows">
+            ${typeConventions.slice(0, 5).map(t => {
+              const ff = t.font === 'display' ? displayFont : bodyFont;
+              return `
+              <div class="sb-type-row">
+                <div class="sb-type-meta">
+                  <div class="sb-type-name">${t.name}</div>
+                  <div class="sb-type-spec">${t.size} · ${t.weight}</div>
+                </div>
+                <div class="sb-type-sample" style="font-size:min(${t.size},28px);font-weight:${t.weight};letter-spacing:${t.tracking||0};font-family:'${ff}',sans-serif;line-height:${t.leading||1.4};text-transform:${t.transform||'none'}">${t.name}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>` : ''}
+
+        ${d.foundation?.values?.length ? `
+        <div class="sb-section">
+          <div class="sb-section-label">Brand values</div>
+          <div class="sb-values">
+            ${d.foundation.values.map(v => `<span class="sb-value-tag">${v.name}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+        ${d.voice?.weare?.length ? `
+        <div class="sb-section">
+          <div class="sb-section-label">Voice: we are</div>
+          <div class="sb-values">
+            ${d.voice.weare.map(t => `<span class="sb-value-tag" style="border-color:rgba(16,185,129,0.25);color:#10B981">${t}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <div class="sb-section">
+          <div class="sb-section-label">Generated config</div>
+          <div class="config-output" id="config-code">${escapeHtml(buildConfigString(d))}</div>
+        </div>
+      `;
+
+      document.getElementById('output-empty').style.display = 'none';
+      sb.style.display = 'flex';
+      document.getElementById('output-title').textContent = `Extracted: ${d.name || 'Brand'}`;
+      document.getElementById('btn-copy').disabled = false;
+      document.getElementById('btn-apply').disabled = false;
+
+      // Inject Google Fonts for preview if possible
+      injectFontPreview(displayFont, bodyFont);
+
+      // Show assets panel
+      document.getElementById('assets-panel').style.display = 'block';
+    }
+
+    // ── Asset upload wiring ───────────────────
+    const ASSET_SLOTS = [
+      { fileId: 'file-logo-primary', previewId: 'preview-logo-primary', dropId: 'drop-logo-primary', key: ['logo', 'primary'] },
+      { fileId: 'file-logo-white',   previewId: 'preview-logo-white',   dropId: 'drop-logo-white',   key: ['logo', 'white']   },
+      { fileId: 'file-logo-icon',    previewId: 'preview-logo-icon',    dropId: 'drop-logo-icon',    key: ['logo', 'icon']    },
+    ];
+
+    ASSET_SLOTS.forEach(slot => {
+      document.getElementById(slot.fileId).addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          const dataUrl = e.target.result;
+          // Inject into extractedData
+          if (extractedData) {
+            if (!extractedData.logo) extractedData.logo = {};
+            extractedData.logo[slot.key[1]] = dataUrl;
+          }
+          // Show preview
+          const preview = document.getElementById(slot.previewId);
+          const inner = document.getElementById(slot.dropId).querySelector('.asset-drop-inner');
+          preview.innerHTML = `<img src="${dataUrl}" alt="">`;
+          preview.style.display = 'flex';
+          if (inner) inner.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Brand photos (multiple)
+    document.getElementById('file-brand-photos').addEventListener('change', function() {
+      const files = Array.from(this.files).slice(0, 4);
+      if (!files.length) return;
+      const preview = document.getElementById('preview-brand-photos');
+      const inner   = document.getElementById('drop-brand-photos').querySelector('.asset-drop-inner');
+      preview.innerHTML = '';
+      preview.style.display = 'flex';
+      if (inner) inner.style.display = 'none';
+
+      const readers = files.map(file => new Promise(resolve => {
+        const r = new FileReader();
+        r.onload = e => resolve(e.target.result);
+        r.readAsDataURL(file);
+      }));
+
+      Promise.all(readers).then(dataUrls => {
+        if (extractedData) {
+          if (!extractedData.imagery) extractedData.imagery = {};
+          extractedData.imagery.photos = dataUrls;
+        }
+        dataUrls.forEach(url => {
+          const img = document.createElement('img');
+          img.src = url;
+          preview.appendChild(img);
+        });
+      });
+    });
+
+    function injectFontPreview(display, body) {
+      const fonts = [...new Set([display, body])].filter(f => f && f !== 'system-ui');
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `https://fonts.googleapis.com/css2?${fonts.map(f => `family=${encodeURIComponent(f)}:wght@400;700;900`).join('&')}&display=swap`;
+      document.head.appendChild(link);
+    }
+
+    function buildConfigString(d) {
+      return `const BRAND = ${JSON.stringify(d, null, 2)};`;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Actions ───────────────────────────────
+    document.getElementById('btn-copy').addEventListener('click', () => {
+      if (!extractedData) return;
+      navigator.clipboard.writeText(buildConfigString(extractedData));
+      const btn = document.getElementById('btn-copy');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = 'Copy Config', 2000);
+    });
+
+    document.getElementById('btn-apply').addEventListener('click', () => {
+      if (!extractedData) return;
+
+      // Use name from the field if the user typed one, overriding what Claude extracted
+      const nameInput = document.getElementById('brand-name-input').value.trim();
+      if (nameInput) extractedData.name = nameInput;
+
+      setStep(4);
+      document.getElementById('btn-apply').disabled = true;
+      document.getElementById('btn-apply').textContent = 'Saving…';
+
+      // In edit mode: preserve the existing project ID so we update rather than create
+      if (_editId) extractedData.id = _editId;
+
+      // Generate an id now (Projects.save will use it if provided) so we can
+      // write sessionStorage BEFORE localStorage — this way brandbook.html works
+      // even if localStorage throws a QuotaExceededError.
+      if (!extractedData.id) {
+        extractedData.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      }
+      const previewBrand = { ...extractedData };
+
+      // ── sessionStorage handoff FIRST (resilient to localStorage failures) ─
+      try {
+        sessionStorage.setItem('bb_pending_brand', JSON.stringify(previewBrand));
+        sessionStorage.setItem('bb_last_brand',    JSON.stringify(previewBrand));
+      } catch(ssErr) {
+        console.warn('[Brandbook] sessionStorage write failed:', ssErr);
+      }
+
+      // ── Persist to localStorage ────────────────────────────────
+      let saved = previewBrand;
+      try {
+        saved = Projects.save(extractedData);
+        console.log('[Brandbook] Saved to localStorage id=%s name=%s', saved.id, saved.name);
+        // Update sessionStorage with final object (includes timestamps)
+        sessionStorage.setItem('bb_pending_brand', JSON.stringify(saved));
+        sessionStorage.setItem('bb_last_brand',    JSON.stringify(saved));
+      } catch (storageErr) {
+        // localStorage quota exceeded or unavailable — session-only mode
+        console.warn('[Brandbook] localStorage save failed (quota?). Brand lives in sessionStorage only this session.', storageErr);
+      }
+
+      const url = `brandbook.html?id=${saved.id}`;
+
+      // ── Success screen — manual navigation ────────────────────
+      const panel = document.querySelector('.panel-output');
+      panel.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:400px;gap:24px;padding:48px;text-align:center;">
+          <div style="width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;font-size:28px;color:#10B981;">✓</div>
+          <div style="font-size:22px;font-weight:700;color:#F0F0FF;letter-spacing:-0.02em;">${saved.name} is ready</div>
+          <a href="${url}" class="btn-open-brandbook" style="display:inline-flex;align-items:center;gap:8px;background:#8B5CF6;color:#fff;font-size:14px;font-weight:600;letter-spacing:0.02em;padding:14px 32px;text-decoration:none;border-radius:6px;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Open Brandbook →</a>
+          <div style="font-size:13px;color:#555;">or <a href="index.html" style="color:#8B5CF6;text-decoration:none;">back to dashboard</a></div>
+        </div>
+      `;
+    });
+
+    // ── Helpers ───────────────────────────────
+    function showError(msg) {
+      const el = document.getElementById('error-banner');
+      el.textContent = '⚠ ' + msg;
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function hideError() {
+      document.getElementById('error-banner').style.display = 'none';
+    }
+
+    function setStep(n) {
+      [1,2,3,4].forEach(i => {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'done');
+        if (i < n)  el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      });
+    }
+
+  })();
+  </script>
+
+</body>
+</html>

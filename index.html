@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brandbook — All Projects</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    img  { display: block; max-width: 100%; }
+
+    /* ── Tokens ─ Dark (default) ──────────────────────────── */
+    :root {
+      --bg:        #111110;
+      --bg-card:   #1A1A19;
+      --bg-hover:  #1F1F1E;
+      --border:    #252523;
+      --border-md: #323230;
+      --border-hi: #4A4A47;
+      --text:      #F4F3EF;
+      --text-2:    #6B6B66;
+      --text-3:    #3D3D39;
+      --accent:    #8B5CF6;
+    }
+
+    /* ── Light mode ───────────────────────────────────────── */
+    body.light {
+      --bg:        #F2F2EF;
+      --bg-card:   #FFFFFF;
+      --bg-hover:  #F8F8F5;
+      --border:    rgba(0,0,0,0.07);
+      --border-md: rgba(0,0,0,0.12);
+      --border-hi: rgba(0,0,0,0.22);
+      --text:      #111110;
+      --text-2:    rgba(17,17,16,0.55);
+      --text-3:    rgba(17,17,16,0.28);
+      --accent:    #7C3AED;
+    }
+
+    body {
+      font-family: 'Manrope', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ──────────────────────────────────────────── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border-md);
+      padding: 0 48px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .header-logo span { color: var(--accent); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Theme toggle ────────────────────────────────────── */
+    .theme-toggle {
+      display: flex;
+      border: 1px solid var(--border-md);
+    }
+
+    .tt-btn {
+      height: 30px;
+      padding: 0 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .tt-btn + .tt-btn { border-left: 1px solid var(--border-md); }
+    .tt-btn:hover { color: var(--text); background: rgba(128,128,128,0.06); }
+    .tt-btn.active { background: var(--accent); color: #fff; }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 36px;
+      padding: 0 18px;
+      border-radius: 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #7C3AED; border-color: #7C3AED; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border-md);
+      color: var(--text-2);
+    }
+    .btn-ghost:hover { border-color: var(--border-hi); color: var(--text); }
+
+    /* ── Main ────────────────────────────────────────────── */
+    .main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 72px 48px;
+    }
+
+    /* ── Page header ─────────────────────────────────────── */
+    .page-header {
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border-md);
+    }
+
+    .page-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(44px, 6vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── Project grid ────────────────────────────────────── */
+    /* Grid tiles joined with 1px gaps — Swiss tight grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border-md); /* gap color = border */
+      border: 1px solid var(--border-md);
+    }
+
+    /* Each cell sits on its own bg so the gap shows as border */
+    .projects-grid > * {
+      background: var(--bg);
+    }
+
+    /* ── Project card ────────────────────────────────────── */
+    .project-card {
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: background 0.12s;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .project-card:hover { background: var(--bg-hover); }
+
+    /* Thin accent rule at top */
+    .card-color-band {
+      height: 3px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      padding: 28px 28px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .card-tagline {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-2);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-updated {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .card-open {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.12s;
+    }
+
+    .project-card:hover .card-open { color: var(--text); }
+
+    .card-actions {
+      position: absolute;
+      top: 10px; right: 10px;
+      display: flex; gap: 4px;
+      opacity: 0;
+      transition: opacity 0.12s;
+    }
+    .project-card:hover .card-actions { opacity: 1; }
+
+    .card-action-btn {
+      padding: 3px 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-3);
+      font-family: var(--font);
+      font-size: 11px;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: all 0.12s;
+      border-radius: 0;
+    }
+    .card-edit:hover {
+      background: rgba(139,92,246,0.10);
+      border-color: rgba(139,92,246,0.35);
+      color: #8B5CF6;
+    }
+    .card-delete:hover {
+      background: rgba(239,68,68,0.10);
+      border-color: rgba(239,68,68,0.30);
+      color: #EF4444;
+    }
+
+    /* ── Create new card ─────────────────────────────────── */
+    .card-new {
+      background: var(--bg-card);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.12s;
+      padding: 28px;
+      position: relative;
+    }
+
+    /* Dashed inner frame */
+    .card-new::after {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed var(--border-hi);
+      pointer-events: none;
+      transition: border-color 0.15s;
+    }
+
+    .card-new:hover { background: var(--bg-hover); }
+    .card-new:hover::after { border-color: var(--accent); }
+
+    .card-new-icon {
+      font-size: 28px;
+      font-weight: 200;
+      color: var(--accent);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-new-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      position: relative; z-index: 1;
+    }
+
+    .card-new-hint {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-3);
+      line-height: 1.5;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Empty state ─────────────────────────────────────── */
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 80px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--bg-card);
+    }
+
+    .empty-icon { font-size: 28px; opacity: 0.18; }
+
+    .empty-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-2);
+      max-width: 340px;
+      line-height: 1.65;
+    }
+
+    /* ── Delete modal ────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.15s;
+    }
+
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-md);
+      border-radius: 0;
+      padding: 36px;
+      max-width: 360px;
+      width: 90%;
+    }
+
+    .modal-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .modal-actions { display: flex; gap: 8px; }
+
+    .btn-danger {
+      background: #EF4444;
+      border: 1px solid #EF4444;
+      color: #fff;
+    }
+    .btn-danger:hover { background: #DC2626; border-color: #DC2626; }
+
+    /* ── Settings modal ──────────────────────────────────── */
+    .modal-lg { max-width: 480px; }
+
+    .modal-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-md);
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .settings-section {
+      margin-bottom: 28px;
+    }
+
+    .settings-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-md);
+    }
+
+    .settings-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .settings-field:last-child { margin-bottom: 0; }
+
+    .settings-field-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .settings-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    .settings-status {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .settings-status.set   { color: #10B981; }
+    .settings-status.unset { color: var(--text-3); }
+
+    .settings-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      padding: 10px 12px;
+      font-family: 'Manrope', monospace;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.12s;
+      border-radius: 0;
+    }
+
+    .settings-input:focus { border-color: var(--accent); }
+    .settings-input::placeholder { color: var(--text-3); }
+
+    .settings-hint {
+      font-size: 10px;
+      color: var(--text-3);
+      line-height: 1.55;
+    }
+
+    .settings-save-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-md);
+    }
+
+    .settings-saved {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #10B981;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .settings-saved.show { opacity: 1; }
+
+    /* Settings gear btn — same style as theme toggle */
+    #btn-settings {
+      border-left: 1px solid var(--border-md);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">Brand<span>book</span></div>
+    <div class="header-right">
+      <div class="theme-toggle">
+        <button class="tt-btn" id="tt-dark" title="Dark mode">◐ Dark</button>
+        <button class="tt-btn" id="tt-light" title="Light mode">○ Light</button>
+        <button class="tt-btn" id="btn-settings" title="Settings">⚙ Settings</button>
+      </div>
+      <a href="intake.html" class="btn btn-primary">+ New Brand</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="page-header">
+      <div class="page-eyebrow">Your workspace</div>
+      <h1 class="page-title">All Brands</h1>
+      <p class="page-subtitle" id="project-count">Loading your projects…</p>
+    </div>
+
+    <div class="projects-grid" id="projects-grid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal">
+      <div class="modal-title">Delete this brand?</div>
+      <div class="modal-desc" id="modal-desc">This will permanently remove the brand and all its data.</div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" id="modal-confirm">Delete</button>
+        <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings modal -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">Settings</div>
+        <div class="modal-subtitle">Keys stored locally — never sent anywhere except the respective API</div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-label">AI Provider Keys</div>
+
+        <div class="settings-field">
+          <div class="settings-field-header">
+            <label class="settings-label" for="s-claude">Claude — Anthropic</label>
+            <span class="settings-status unset" id="s-claude-status">○ Not set</span>
+          </div>
+          <input type="password" id="s-claude" class="settings-input"
+            placeholder="sk-ant-api03-…" autocomplete="off">
+          <span class="settings-hint">Used for brand extraction in the intake form. Leave blank to keep existing key.</span>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-field-header">
+            <label class="settings-label" for="s-openai">OpenAI</label>
+            <span class="settings-status unset" id="s-openai-status">○ Not set</span>
+          </div>
+          <input type="password" id="s-openai" class="settings-input"
+            placeholder="sk-…" autocomplete="off">
+          <span class="settings-hint">GPT-4o — alternative extraction engine.</span>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-field-header">
+            <label class="settings-label" for="s-fal">Fal AI</label>
+            <span class="settings-status unset" id="s-fal-status">○ Not set</span>
+          </div>
+          <input type="password" id="s-fal" class="settings-input"
+            placeholder="fal-…" autocomplete="off">
+          <span class="settings-hint">Image generation for brand mockups.</span>
+        </div>
+      </div>
+
+      <div class="settings-save-row">
+        <button class="btn btn-primary" id="settings-save">Save Settings</button>
+        <button class="btn btn-ghost" id="settings-cancel">Cancel</button>
+        <span class="settings-saved" id="settings-saved-badge">✓ Saved</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/projects.js"></script>
+  <script src="brand.config.js"></script>
+
+  <!-- Theme toggle -->
+  <script>
+  (function() {
+    'use strict';
+    const KEY = 'bb-theme';
+
+    function apply(t) {
+      document.body.classList.toggle('light', t === 'light');
+      document.getElementById('tt-dark').classList.toggle('active', t === 'dark');
+      document.getElementById('tt-light').classList.toggle('active', t === 'light');
+      localStorage.setItem(KEY, t);
+    }
+
+    const saved = localStorage.getItem(KEY) || 'dark';
+    apply(saved);
+
+    document.getElementById('tt-dark').addEventListener('click',  () => apply('dark'));
+    document.getElementById('tt-light').addEventListener('click', () => apply('light'));
+  })();
+  </script>
+
+  <!-- Settings -->
+  <script>
+  (function() {
+    'use strict';
+    const SETTINGS_KEY = 'bb-settings';
+
+    function getSettings() {
+      try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
+      catch { return {}; }
+    }
+
+    function refreshStatuses() {
+      const s = getSettings();
+      function setStatus(elId, key) {
+        const el = document.getElementById(elId);
+        if (s[key]) {
+          el.textContent = '● Saved';
+          el.className = 'settings-status set';
+        } else {
+          el.textContent = '○ Not set';
+          el.className = 'settings-status unset';
+        }
+      }
+      setStatus('s-claude-status', 'claudeKey');
+      setStatus('s-openai-status', 'openaiKey');
+      setStatus('s-fal-status',    'falKey');
+    }
+
+    function openSettings() {
+      // Clear inputs (never show actual keys)
+      document.getElementById('s-claude').value = '';
+      document.getElementById('s-openai').value = '';
+      document.getElementById('s-fal').value    = '';
+      refreshStatuses();
+      document.getElementById('settings-modal').classList.add('open');
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').classList.remove('open');
+    }
+
+    document.getElementById('btn-settings').addEventListener('click', openSettings);
+    document.getElementById('settings-cancel').addEventListener('click', closeSettings);
+    document.getElementById('settings-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeSettings();
+    });
+
+    document.getElementById('settings-save').addEventListener('click', () => {
+      const s = getSettings();
+
+      const claude = document.getElementById('s-claude').value.trim();
+      const openai = document.getElementById('s-openai').value.trim();
+      const fal    = document.getElementById('s-fal').value.trim();
+
+      // Only overwrite if user typed something new; blank = keep existing
+      if (claude) s.claudeKey = claude;
+      if (openai) s.openaiKey = openai;
+      if (fal)    s.falKey    = fal;
+
+      // If user cleared a field AND it had a value, allow explicit clear via a single space
+      // (blank = keep, single space = clear — too arcane; just keep for now)
+
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+      refreshStatuses();
+
+      // Clear inputs again after save
+      document.getElementById('s-claude').value = '';
+      document.getElementById('s-openai').value = '';
+      document.getElementById('s-fal').value    = '';
+
+      // Show saved badge
+      const badge = document.getElementById('settings-saved-badge');
+      badge.classList.add('show');
+      setTimeout(() => badge.classList.remove('show'), 2200);
+    });
+
+  })();
+  </script>
+
+  <!-- Dashboard -->
+  <script>
+  (function() {
+    'use strict';
+
+    let pendingDeleteId = null;
+
+    Projects.seedDemo();
+
+    // ── Storage diagnostic (shown in console) ─
+    (function diagStorage() {
+      var all = Projects.getAll();
+      console.log('[Dashboard] Projects in storage (' + all.length + '):', all.map(function(p){ return p.id + ' / ' + p.name; }).join(', ') || 'none');
+    })();
+
+    // ── Render ────────────────────────────
+    function render() {
+      const projects = Projects.getAll();
+      const grid     = document.getElementById('projects-grid');
+      const count    = document.getElementById('project-count');
+
+      count.textContent = projects.length === 0
+        ? 'No brands yet — create your first one.'
+        : `${projects.length} brand${projects.length !== 1 ? 's' : ''}`;
+
+      grid.innerHTML = '';
+      grid.appendChild(newCard());
+
+      if (projects.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = `
+          <div class="empty-icon">◎</div>
+          <div class="empty-title">No brands yet</div>
+          <div class="empty-desc">Click "New Brand" to create your first brandbook, or use the card above to get started.</div>
+        `;
+        grid.appendChild(empty);
+        return;
+      }
+
+      projects.forEach(p => grid.appendChild(projectCard(p)));
+    }
+
+    function newCard() {
+      const a = document.createElement('a');
+      a.href      = 'intake.html';
+      a.className = 'card-new';
+      a.innerHTML = `
+        <div class="card-new-icon">+</div>
+        <div class="card-new-label">Create new brand</div>
+        <div class="card-new-hint">Upload a PDF, paste CSS,<br>or start from scratch</div>
+      `;
+      return a;
+    }
+
+    function projectCard(p) {
+      const accent  = p.accentColor || '#8B5CF6';
+      const updated = formatDate(p.updated);
+
+      const card = document.createElement('div');
+      card.className = 'project-card';
+      card.innerHTML = `
+        <div class="card-color-band" style="background:${accent}"></div>
+        <div class="card-body">
+          <div class="card-name">${esc(p.name)}</div>
+          <div class="card-tagline">${esc(p.tagline || 'No tagline')}</div>
+          <div class="card-meta">
+            <span class="card-updated">Updated ${updated}</span>
+            <span class="card-open">Open →</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="card-action-btn card-edit"  data-id="${p.id}" title="Add assets / re-extract">Edit</button>
+          <button class="card-action-btn card-delete" data-id="${p.id}" title="Delete brand">Delete</button>
+        </div>
+      `;
+
+      card.addEventListener('click', e => {
+        if (e.target.closest('.card-actions')) return;
+        // Write brand to sessionStorage before navigating so brandbook.html
+        // always has fresh data regardless of ?id= query string handling.
+        try {
+          const brandData = Projects.get(p.id);
+          if (brandData) {
+            sessionStorage.setItem('bb_pending_brand', JSON.stringify(brandData));
+            sessionStorage.setItem('bb_last_brand',    JSON.stringify(brandData));
+          }
+        } catch(e) {}
+        window.location.href = `brandbook.html?id=${p.id}`;
+      });
+
+      card.querySelector('.card-edit').addEventListener('click', e => {
+        e.stopPropagation();
+        window.location.href = `intake.html?id=${p.id}`;
+      });
+
+      card.querySelector('.card-delete').addEventListener('click', e => {
+        e.stopPropagation();
+        pendingDeleteId = p.id;
+        document.getElementById('modal-desc').textContent = `"${p.name}" will be permanently deleted. This cannot be undone.`;
+        document.getElementById('delete-modal').classList.add('open');
+      });
+
+      return card;
+    }
+
+    // ── Delete modal ──────────────────────
+    document.getElementById('modal-confirm').addEventListener('click', () => {
+      if (!pendingDeleteId) return;
+      Projects.delete(pendingDeleteId);
+      pendingDeleteId = null;
+      closeModal();
+      render();
+    });
+
+    document.getElementById('modal-cancel').addEventListener('click', closeModal);
+    document.getElementById('delete-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    function closeModal() {
+      document.getElementById('delete-modal').classList.remove('open');
+      pendingDeleteId = null;
+    }
+
+    // ── Helpers ───────────────────────────
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      const now = new Date();
+      const diff = (now - d) / 1000;
+      if (diff < 60)    return 'just now';
+      if (diff < 3600)  return `${Math.floor(diff/60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function esc(str) {
+      return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    render();
+
+  })();
+  </script>
+
+</body>
+</html>
