@@ -1,0 +1,15 @@
+{
+  "buildCommand": "echo 'No build needed for static site'",
+  "outputDirectory": ".",
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/brandbook.html",
+      "destination": "/brandbook.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/index.html"
+    }
+  ]
+}
