@@ -1,0 +1,20 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Node (if added later)
+node_modules/
+.env
+.env.local
+
+# Logs
+*.log
+
+# Test/temp files
+check_projects.html
+index\ copy.html
