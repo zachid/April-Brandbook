@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>April · Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── Dark tokens (default) ─────────────────────────────── */
+    :root {
+      --bg:        #111110;
+      --bg-card:   #1A1A19;
+      --bg-hover:  #1F1F1E;
+      --border:    #252523;
+      --border-md: #323230;
+      --border-hi: #4A4A47;
+      --text:      #F4F3EF;
+      --text-2:    #6B6B66;
+      --text-3:    #3D3D39;
+      --accent:    #8B5CF6;
+      --accent-2:  #06B6D4;
+    }
+
+    /* ── Light tokens ──────────────────────────────────────── */
+    body.light {
+      --bg:        #F2F2EF;
+      --bg-card:   #FFFFFF;
+      --bg-hover:  #F8F8F5;
+      --border:    rgba(0,0,0,0.07);
+      --border-md: rgba(0,0,0,0.12);
+      --border-hi: rgba(0,0,0,0.22);
+      --text:      #111110;
+      --text-2:    rgba(17,17,16,0.55);
+      --text-3:    rgba(17,17,16,0.28);
+      --accent:    #7C3AED;
+      --accent-2:  #0891B2;
+    }
+
+    /* ── Base ──────────────────────────────────────────────── */
+    body {
+      font-family: 'Manrope', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* ── Header ────────────────────────────────────────────── */
+    .ds-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 56px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+    }
+
+    .ds-logo {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .ds-logo span { color: var(--accent); }
+
+    .ds-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .ds-nav-link {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color 0.12s;
+    }
+
+    .ds-nav-link:hover { color: var(--text); }
+
+    .theme-toggle {
+      display: flex;
+      border: 1px solid var(--border-md);
+    }
+
+    .tt-btn {
+      height: 30px;
+      padding: 0 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .tt-btn + .tt-btn { border-left: 1px solid var(--border-md); }
+    .tt-btn:hover { color: var(--text); }
+    .tt-btn.active { background: var(--accent); color: #fff; }
+
+    /* ── Section wrapper ───────────────────────────────────── */
+    .ds-section {
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--border-md);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .ds-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .ds-section-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .ds-section-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-bottom: 56px;
+      max-width: 520px;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       COLORS
+    ──────────────────────────────────────────────────────── */
+    .color-group { margin-bottom: 40px; }
+
+    .color-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .color-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      min-width: 140px;
+      flex: 1;
+    }
+
+    .swatch-chip {
+      height: 80px;
+      border: 1px solid var(--border-md);
+    }
+
+    .swatch-info {
+      padding: 10px 0 0;
+    }
+
+    .swatch-var {
+      font-family: 'Manrope', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      margin-bottom: 3px;
+    }
+
+    .swatch-hex {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+      letter-spacing: 0.02em;
+    }
+
+    .swatch-use {
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.4;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       TYPOGRAPHY
+    ──────────────────────────────────────────────────────── */
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 32px;
+      align-items: baseline;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .type-row:first-child { border-top: 1px solid var(--border); }
+
+    .type-sample { overflow: hidden; }
+
+    .type-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .type-meta-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .type-meta-spec {
+      font-family: 'Manrope', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* Type specimens */
+    .t-display    { font-size: clamp(44px, 6vw, 80px); font-weight: 800; letter-spacing: -0.04em; line-height: 0.92; color: var(--text); }
+    .t-title      { font-size: clamp(30px, 4vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--text); }
+    .t-card-name  { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .t-body       { font-size: 16px; font-weight: 400; line-height: 1.65; color: var(--text); }
+    .t-secondary  { font-size: 14px; font-weight: 400; line-height: 1.6; color: var(--text-2); }
+    .t-caption    { font-size: 13px; font-weight: 400; line-height: 1.55; color: var(--text-2); }
+    .t-label      { font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-2); }
+    .t-eyebrow    { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+    .t-mono       { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 12px; font-weight: 400; color: var(--text-2); }
+
+    /* ────────────────────────────────────────────────────────
+       SPACING
+    ──────────────────────────────────────────────────────── */
+    .spacing-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spacing-var {
+      font-family: 'Manrope', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      width: 60px;
+      flex-shrink: 0;
+    }
+
+    .spacing-bar-wrap {
+      flex: 1;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spacing-bar {
+      height: 8px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    .spacing-px {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-2);
+      width: 40px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       BORDERS
+    ──────────────────────────────────────────────────────── */
+    .border-demos {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .border-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 120px;
+      align-items: center;
+      gap: 32px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .border-row:first-child { border-top: 1px solid var(--border); }
+
+    .border-var {
+      font-family: 'Manrope', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+    }
+
+    .border-demo-line {
+      height: 1px;
+    }
+
+    .border-value {
+      font-size: 11px;
+      color: var(--text-2);
+      text-align: right;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       COMPONENTS
+    ──────────────────────────────────────────────────────── */
+    .component-group {
+      margin-bottom: 56px;
+    }
+
+    .component-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .component-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 18px;
+      border-radius: 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      white-space: nowrap;
+    }
+
+    .btn-primary  { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-ghost    { background: transparent; border-color: var(--border-md); color: var(--text-2); }
+    .btn-ghost:hover { border-color: var(--border-hi); color: var(--text); }
+
+    .btn-danger   { background: #EF4444; border-color: #EF4444; color: #fff; }
+    .btn-danger:hover { background: #DC2626; border-color: #DC2626; }
+
+    .btn-lg {
+      height: 44px;
+      padding: 0 24px;
+      font-size: 11px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .badge-do   { background: rgba(16,185,129,0.10); color: #10B981; border: 1px solid rgba(16,185,129,0.20); }
+    .badge-dont { background: rgba(239,68,68,0.10);  color: #EF4444; border: 1px solid rgba(239,68,68,0.20); }
+    .badge-new  { background: rgba(139,92,246,0.10); color: var(--accent); border: 1px solid rgba(139,92,246,0.20); }
+
+    /* Keyword tag */
+    .kw-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.18);
+      color: var(--accent);
+    }
+
+    /* Input */
+    .ds-input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 280px;
+    }
+
+    .ds-input-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    .ds-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      padding: 10px 12px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      border-radius: 0;
+      transition: border-color 0.12s;
+    }
+
+    .ds-input:focus { border-color: var(--accent); }
+    .ds-input::placeholder { color: var(--text-3); }
+
+    /* Project card */
+    .card-demo {
+      width: 240px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-md);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .card-demo:hover { background: var(--bg-hover); }
+
+    .card-color-band {
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .card-body-demo {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .card-name-demo {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .card-tag-demo {
+      font-size: 11px;
+      color: var(--text-2);
+    }
+
+    .card-meta-demo {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-date-demo {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .card-open-demo {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    /* ────────────────────────────────────────────────────────
+       LAYOUT GRID
+    ──────────────────────────────────────────────────────── */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-md);
+      border: 1px solid var(--border-md);
+    }
+
+    .grid-cell {
+      background: var(--bg-card);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .grid-cell-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .grid-cell-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .grid-cell-sub {
+      font-size: 11px;
+      color: var(--text-2);
+    }
+
+    .grid-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-3);
+      line-height: 1.6;
+    }
+
+    .grid-note code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(139,92,246,0.08);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       RADIUS
+    ──────────────────────────────────────────────────────── */
+    .radius-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .radius-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      border: 1px solid var(--border-hi);
+      background: var(--bg-card);
+    }
+
+    .radius-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-3);
+    }
+
+    .radius-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ────────────────────────────────────────────────────────
+       MOTION
+    ──────────────────────────────────────────────────────── */
+    .motion-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .motion-btn {
+      height: 36px;
+      padding: 0 18px;
+      border-radius: 0;
+      border: 1px solid var(--border-md);
+      background: transparent;
+      color: var(--text-2);
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .motion-fast   { transition: background 0.08s, color 0.08s, border-color 0.08s; }
+    .motion-normal { transition: background 0.15s, color 0.15s, border-color 0.15s; }
+    .motion-slow   { transition: background 0.3s,  color 0.3s,  border-color 0.3s;  }
+
+    .motion-fast:hover,
+    .motion-normal:hover,
+    .motion-slow:hover {
+      background: rgba(139,92,246,0.10);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .motion-spec {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* ────────────────────────────────────────────────────────
+       FOOTER
+    ──────────────────────────────────────────────────────── */
+    .ds-footer {
+      padding: 32px 48px;
+      border-top: 1px solid var(--border-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ds-footer-logo {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .ds-footer-note {
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .ds-header { padding: 0 20px; }
+      .ds-nav { display: none; }
+      .ds-section { padding: 48px 20px; }
+      .type-row { grid-template-columns: 1fr; }
+      .type-meta { align-items: flex-start; }
+      .grid-demo { grid-template-columns: repeat(2, 1fr); }
+      .ds-footer { padding: 24px 20px; flex-direction: column; gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ──────────────────────────────────────────── -->
+  <header class="ds-header">
+    <div class="ds-logo">April <span>·</span> Design System</div>
+    <nav class="ds-nav">
+      <a class="ds-nav-link" href="#colors">Colors</a>
+      <a class="ds-nav-link" href="#typography">Type</a>
+      <a class="ds-nav-link" href="#spacing">Spacing</a>
+      <a class="ds-nav-link" href="#borders">Borders</a>
+      <a class="ds-nav-link" href="#components">Components</a>
+      <a class="ds-nav-link" href="#grid">Grid</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="theme-toggle">
+        <button class="tt-btn active" id="tt-dark" onclick="setTheme('dark')">Dark</button>
+        <button class="tt-btn" id="tt-light" onclick="setTheme('light')">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── HERO ────────────────────────────────────────────── -->
+  <section class="ds-section" style="padding-top:96px;padding-bottom:96px;border-bottom:1px solid var(--border-md);">
+    <div class="ds-eyebrow">April Platform</div>
+    <div style="font-size:clamp(44px,6vw,80px);font-weight:800;letter-spacing:-0.04em;line-height:0.92;color:var(--text);margin-bottom:24px;">Design System</div>
+    <div style="font-size:16px;color:var(--text-2);line-height:1.7;max-width:480px;margin-bottom:40px;">
+      One typeface. One accent. Swiss precision. This page is the source of truth for all visual decisions across the April platform.
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;flex-direction:column;gap:3px;padding:16px 20px;border:1px solid var(--border-md);background:var(--bg-card);min-width:120px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);">Typeface</span>
+        <span style="font-size:14px;font-weight:700;color:var(--text);">Manrope</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;padding:16px 20px;border:1px solid var(--border-md);background:var(--bg-card);min-width:120px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);">Accent</span>
+        <span style="font-size:14px;font-weight:700;color:var(--accent);">#8B5CF6</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;padding:16px 20px;border:1px solid var(--border-md);background:var(--bg-card);min-width:120px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);">Radius</span>
+        <span style="font-size:14px;font-weight:700;color:var(--text);">0 (Swiss)</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;padding:16px 20px;border:1px solid var(--border-md);background:var(--bg-card);min-width:120px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);">Mode</span>
+        <span style="font-size:14px;font-weight:700;color:var(--text);">Dark first</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COLORS ──────────────────────────────────────────── -->
+  <section class="ds-section" id="colors">
+    <div class="ds-eyebrow">01</div>
+    <div class="ds-section-title">Colors</div>
+    <div class="ds-section-desc">All tokens use CSS custom properties. Dark is default. Light activates via <code style="font-family:monospace;font-size:12px;color:var(--accent);">body.light</code>.</div>
+
+    <!-- Backgrounds -->
+    <div class="color-group">
+      <div class="color-group-label">Backgrounds</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#111110;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--bg</div>
+            <div class="swatch-hex">#111110</div>
+            <div class="swatch-use">Page background</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#1A1A19;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--bg-card</div>
+            <div class="swatch-hex">#1A1A19</div>
+            <div class="swatch-use">Cards, containers</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#1F1F1E;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--bg-hover</div>
+            <div class="swatch-hex">#1F1F1E</div>
+            <div class="swatch-use">Hover state</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#F2F2EF;border:1px solid #e0e0dc;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--bg (light)</div>
+            <div class="swatch-hex">#F2F2EF</div>
+            <div class="swatch-use">Light mode page bg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="color-group">
+      <div class="color-group-label">Text</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#F4F3EF;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--text</div>
+            <div class="swatch-hex">#F4F3EF</div>
+            <div class="swatch-use">Primary text (warm white)</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#6B6B66;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--text-2</div>
+            <div class="swatch-hex">#6B6B66</div>
+            <div class="swatch-use">Secondary, body copy</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#3D3D39;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--text-3</div>
+            <div class="swatch-hex">#3D3D39</div>
+            <div class="swatch-use">Muted, metadata</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#111110;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--text (light)</div>
+            <div class="swatch-hex">#111110</div>
+            <div class="swatch-use">Primary text, light mode</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Borders -->
+    <div class="color-group">
+      <div class="color-group-label">Borders</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#252523;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--border</div>
+            <div class="swatch-hex">#252523</div>
+            <div class="swatch-use">Hairline dividers</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#323230;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--border-md</div>
+            <div class="swatch-hex">#323230</div>
+            <div class="swatch-use">Standard borders</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#4A4A47;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--border-hi</div>
+            <div class="swatch-hex">#4A4A47</div>
+            <div class="swatch-use">Emphasis, focus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accent -->
+    <div class="color-group">
+      <div class="color-group-label">Accent</div>
+      <div class="color-row">
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#8B5CF6;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--accent</div>
+            <div class="swatch-hex">#8B5CF6</div>
+            <div class="swatch-use">Electric violet — CTA, active, highlights</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#7C3AED;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--accent (light)</div>
+            <div class="swatch-hex">#7C3AED</div>
+            <div class="swatch-use">Darkened for light-bg contrast</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#06B6D4;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">--accent-2</div>
+            <div class="swatch-hex">#06B6D4</div>
+            <div class="swatch-use">Cyan — secondary accent</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#10B981;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">— functional</div>
+            <div class="swatch-hex">#10B981</div>
+            <div class="swatch-use">Success, DO badges</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-chip" style="background:#EF4444;"></div>
+          <div class="swatch-info">
+            <div class="swatch-var">— functional</div>
+            <div class="swatch-hex">#EF4444</div>
+            <div class="swatch-use">Danger, DONT badges, delete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ──────────────────────────────────────── -->
+  <section class="ds-section" id="typography">
+    <div class="ds-eyebrow">02</div>
+    <div class="ds-section-title">Typography</div>
+    <div class="ds-section-desc">One typeface: Manrope. Hierarchy through weight, size, and letter-spacing only. No Syne. No Inter.</div>
+
+    <div>
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-display">April</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Display</span>
+          <span class="type-meta-spec">Manrope 800<br>clamp(44–80px)<br>ls: -0.04em<br>lh: 0.92</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-title">Brand Guidelines</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Section Title</span>
+          <span class="type-meta-spec">Manrope 800<br>clamp(30–52px)<br>ls: -0.03em<br>lh: 1.05</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-card-name">AURA — Clarity in Every Direction</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Card Name</span>
+          <span class="type-meta-spec">Manrope 800<br>18px<br>ls: -0.03em</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-body">The design system is built on a single typeface, one accent colour, and a strict spatial grid. Every element earns its place.</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Body</span>
+          <span class="type-meta-spec">Manrope 400<br>16px<br>lh: 1.65</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-secondary">Secondary text for descriptions, metadata, and supporting copy.</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Secondary</span>
+          <span class="type-meta-spec">Manrope 400<br>14px<br>color: --text-2</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-caption">Updated May 10, 2026 · 3 sections edited</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Caption</span>
+          <span class="type-meta-spec">Manrope 400<br>13px<br>lh: 1.55</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-label">Form Label · UI Tag · Navigation</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Label</span>
+          <span class="type-meta-spec">Manrope 700<br>11px uppercase<br>ls: 0.10em</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-eyebrow">Your Workspace · Section 01</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Eyebrow</span>
+          <span class="type-meta-spec">Manrope 700<br>10px uppercase<br>ls: 0.16em<br>color: --accent</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-sample">
+          <div class="t-mono">#8B5CF6 · rgba(139,92,246,0.10) · font-weight: 800</div>
+        </div>
+        <div class="type-meta">
+          <span class="type-meta-name">Mono</span>
+          <span class="type-meta-spec">SF Mono / Fira Code<br>12px<br>Hex values, code</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPACING ─────────────────────────────────────────── -->
+  <section class="ds-section" id="spacing">
+    <div class="ds-eyebrow">03</div>
+    <div class="ds-section-title">Spacing</div>
+    <div class="ds-section-desc">4px base unit. All spacing is a multiple of 4.</div>
+
+    <div>
+      <div class="spacing-row"><span class="spacing-var">--sp-1</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:4px;"></div></div><span class="spacing-px">4px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-2</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:8px;"></div></div><span class="spacing-px">8px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-3</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:12px;"></div></div><span class="spacing-px">12px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-4</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16px;"></div></div><span class="spacing-px">16px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-5</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:20px;"></div></div><span class="spacing-px">20px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-6</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:24px;"></div></div><span class="spacing-px">24px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-8</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:32px;"></div></div><span class="spacing-px">32px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-10</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:40px;"></div></div><span class="spacing-px">40px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-12</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:48px;"></div></div><span class="spacing-px">48px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-16</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:64px;"></div></div><span class="spacing-px">64px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-20</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:80px;"></div></div><span class="spacing-px">80px</span></div>
+      <div class="spacing-row"><span class="spacing-var">--sp-24</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:96px;"></div></div><span class="spacing-px">96px</span></div>
+    </div>
+  </section>
+
+  <!-- ── BORDERS ─────────────────────────────────────────── -->
+  <section class="ds-section" id="borders">
+    <div class="ds-eyebrow">04</div>
+    <div class="ds-section-title">Borders</div>
+    <div class="ds-section-desc">Hairline 1px rules. Solid hex in dark mode. rgba in light mode. No shadows.</div>
+
+    <div class="border-demos">
+      <div class="border-row">
+        <span class="border-var">--border</span>
+        <div class="border-demo-line" style="background:#252523;"></div>
+        <span class="border-value">#252523 · Dividers</span>
+      </div>
+      <div class="border-row">
+        <span class="border-var">--border-md</span>
+        <div class="border-demo-line" style="background:#323230;"></div>
+        <span class="border-value">#323230 · Cards</span>
+      </div>
+      <div class="border-row">
+        <span class="border-var">--border-hi</span>
+        <div class="border-demo-line" style="background:#4A4A47;"></div>
+        <span class="border-value">#4A4A47 · Emphasis</span>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <div class="color-group-label" style="margin-bottom:16px;">Border Radius</div>
+      <div class="radius-row">
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:0;"></div>
+          <div class="radius-label">Default</div>
+          <div class="radius-value">0px — Sharp</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:999px;"></div>
+          <div class="radius-label">Pill (exception)</div>
+          <div class="radius-value">999px — Tags only</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:var(--text-3);line-height:1.7;">
+        Zero radius everywhere. The only exception: badges and keyword tags use <code style="font-family:monospace;color:var(--accent);font-size:11px;">border-radius: 999px</code> as a functional visual distinction — not decoration.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPONENTS ──────────────────────────────────────── -->
+  <section class="ds-section" id="components">
+    <div class="ds-eyebrow">05</div>
+    <div class="ds-section-title">Components</div>
+    <div class="ds-section-desc">All interactive. Hover to see state changes.</div>
+
+    <!-- Buttons -->
+    <div class="component-group">
+      <div class="component-group-label">Buttons — border-radius: 0</div>
+      <div class="component-row" style="margin-bottom:12px;">
+        <button class="btn btn-primary btn-lg">+ New Brand</button>
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-danger">Delete</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);line-height:1.8;">
+        Primary: <code style="font-family:monospace;font-size:10px;color:var(--accent);">bg --accent · border --accent · color #fff</code><br>
+        Ghost: <code style="font-family:monospace;font-size:10px;color:var(--accent);">transparent · border --border-md</code><br>
+        Danger: <code style="font-family:monospace;font-size:10px;color:var(--accent);">bg #EF4444 · hover #DC2626</code><br>
+        All: <code style="font-family:monospace;font-size:10px;color:var(--accent);">height 36px · font 10px/700/uppercase · ls 0.10em</code>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="component-group">
+      <div class="component-group-label">Badges — border-radius: 999px (functional exception)</div>
+      <div class="component-row">
+        <span class="badge badge-do">✓ Do</span>
+        <span class="badge badge-dont">× Don't</span>
+        <span class="badge badge-new">New</span>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="component-group">
+      <div class="component-group-label">Keyword Tags — border-radius: 999px</div>
+      <div class="component-row">
+        <span class="kw-tag">minimal</span>
+        <span class="kw-tag">geometric</span>
+        <span class="kw-tag">dark contrast</span>
+        <span class="kw-tag">structured</span>
+        <span class="kw-tag">high-end</span>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="component-group">
+      <div class="component-group-label">Input — border-radius: 0</div>
+      <div class="ds-input-wrap">
+        <label class="ds-input-label">Brand Name</label>
+        <input class="ds-input" type="text" placeholder="Enter brand name…" />
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--text-3);">
+        Default: <code style="font-family:monospace;font-size:10px;color:var(--accent);">border --border-md</code> · Focus: <code style="font-family:monospace;font-size:10px;color:var(--accent);">border --accent</code>
+      </div>
+    </div>
+
+    <!-- Project Card -->
+    <div class="component-group">
+      <div class="component-group-label">Project Card — border-radius: 0</div>
+      <div class="component-row" style="align-items:flex-start;">
+        <div class="card-demo">
+          <div class="card-color-band"></div>
+          <div class="card-body-demo">
+            <div class="card-name-demo">AURA</div>
+            <div class="card-tag-demo">Clarity in Every Direction</div>
+          </div>
+          <div class="card-meta-demo">
+            <span class="card-date-demo">May 10, 2026</span>
+            <span class="card-open-demo">Open →</span>
+          </div>
+        </div>
+        <div class="card-demo" style="width:200px;min-height:140px;border:1px dashed var(--border-hi);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:6px;padding:20px;position:relative;">
+          <div style="position:absolute;inset:8px;border:1px dashed var(--border-hi);pointer-events:none;"></div>
+          <div style="font-size:22px;font-weight:200;color:var(--accent);position:relative;z-index:1;">+</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-2);position:relative;z-index:1;">Create New Brand</div>
+          <div style="font-size:10px;color:var(--text-3);position:relative;z-index:1;line-height:1.5;">Upload a PDF, paste CSS,<br>or start from scratch</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Motion -->
+    <div class="component-group">
+      <div class="component-group-label">Motion — Transitions</div>
+      <div class="motion-row">
+        <div>
+          <button class="motion-btn motion-fast">80ms — Fast</button>
+          <span class="motion-spec">Icon hovers, tiny state changes</span>
+        </div>
+        <div>
+          <button class="motion-btn motion-normal">150ms — Normal</button>
+          <span class="motion-spec">Buttons, inputs, nav items</span>
+        </div>
+        <div>
+          <button class="motion-btn motion-slow">300ms — Slow</button>
+          <span class="motion-spec">Panels, overlays, cards</span>
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:11px;color:var(--text-3);">
+        Easing: <code style="font-family:monospace;font-size:10px;color:var(--accent);">ease</code> · Properties: <code style="font-family:monospace;font-size:10px;color:var(--accent);">background, color, border-color, opacity</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GRID ────────────────────────────────────────────── -->
+  <section class="ds-section" id="grid">
+    <div class="ds-eyebrow">06</div>
+    <div class="ds-section-title">Layout Grid</div>
+    <div class="ds-section-desc">The gap between cells is the border. No extra border declaration needed.</div>
+
+    <div class="grid-demo">
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 01</span>
+        <span class="grid-cell-title">AURA</span>
+        <span class="grid-cell-sub">Identity System</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 02</span>
+        <span class="grid-cell-title">Noma</span>
+        <span class="grid-cell-sub">Editorial Brand</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 03</span>
+        <span class="grid-cell-title">Forme</span>
+        <span class="grid-cell-sub">Product Brand</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 04</span>
+        <span class="grid-cell-title">Kira</span>
+        <span class="grid-cell-sub">Retail Brand</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 05</span>
+        <span class="grid-cell-title">Sable</span>
+        <span class="grid-cell-sub">Luxury Brand</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 06</span>
+        <span class="grid-cell-title">Oris</span>
+        <span class="grid-cell-sub">Tech Brand</span>
+      </div>
+      <div class="grid-cell">
+        <span class="grid-cell-label">Brand 07</span>
+        <span class="grid-cell-title">Cendre</span>
+        <span class="grid-cell-sub">Studio Brand</span>
+      </div>
+      <div class="grid-cell" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:4px;position:relative;border:none;">
+        <div style="position:absolute;inset:8px;border:1px dashed var(--border-hi);pointer-events:none;"></div>
+        <div style="font-size:18px;font-weight:200;color:var(--accent);position:relative;z-index:1;">+</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-2);position:relative;z-index:1;">New Brand</div>
+      </div>
+    </div>
+
+    <div class="grid-note">
+      CSS: <code>display: grid · gap: 1px · background: var(--border-md)</code><br>
+      The <code>background</code> on the grid container shows through the <code>1px</code> gaps — creating borders without individual border declarations. Each cell sets its own <code>background: var(--bg-card)</code>.
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────────── -->
+  <footer class="ds-footer">
+    <div class="ds-footer-logo">April · Design System</div>
+    <div class="ds-footer-note">Extracted from source · May 2026</div>
+  </footer>
+
+  <script>
+    function setTheme(t) {
+      document.body.classList.toggle('light', t === 'light');
+      document.getElementById('tt-dark').classList.toggle('active', t === 'dark');
+      document.getElementById('tt-light').classList.toggle('active', t === 'light');
+      localStorage.setItem('april-ds-theme', t);
+    }
+
+    // Restore saved theme
+    const saved = localStorage.getItem('april-ds-theme') || 'dark';
+    setTheme(saved);
+  </script>
+</body>
+</html>

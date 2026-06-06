@@ -954,6 +954,7 @@
           <button class="tab-btn active" data-tab="file">📄 File / PDF</button>
           <button class="tab-btn" data-tab="paste">✏️ Paste</button>
           <button class="tab-btn" data-tab="figma">🎨 Figma</button>
+          <button class="tab-btn" data-tab="url">🌐 URL</button>
         </div>
       </div>
 
@@ -986,6 +987,28 @@
           <div class="field-label" style="margin-bottom:8px">Figma Access Token (optional)</div>
           <input type="password" id="figma-token" class="api-input" placeholder="figd_…">
           <span class="field-hint">From Figma → Account Settings → Access Tokens</span>
+        </div>
+      </div>
+
+      <!-- URL scrape tab -->
+      <div id="tab-url" style="display:none">
+        <div class="field-label" style="margin-bottom:8px">Website URL to scrape</div>
+        <div class="url-row">
+          <input type="url" id="scrape-url" class="url-input" placeholder="https://brand.com">
+          <button id="btn-fetch-url" style="height:44px;padding:0 16px;background:var(--bg-card);border:1px solid var(--border-md);color:var(--text-2);font-family:'Manrope',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border-md)';this.style.color='var(--text-2)'">Fetch</button>
+        </div>
+        <p class="field-hint" style="margin-top:8px">April fetches the page HTML and extracts CSS variables, fonts, colors, and meta tags. Works best on public marketing sites and landing pages.</p>
+
+        <!-- Fetch status -->
+        <div id="url-status" style="display:none;margin-top:12px;padding:10px 14px;border:1px solid var(--border-md);background:var(--bg-card);font-size:12px;color:var(--text-2);line-height:1.5;"></div>
+
+        <!-- Scraped preview (collapsed raw HTML snippet) -->
+        <div id="url-preview" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--text-3);">Extracted CSS &amp; Meta</span>
+            <button id="btn-url-clear" style="background:none;border:none;color:var(--text-3);font-size:11px;cursor:pointer;padding:0;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--text-3)'">Clear ✕</button>
+          </div>
+          <pre id="url-raw-preview" style="background:var(--bg);border:1px solid var(--border);padding:12px;font-family:'SF Mono','Fira Code',monospace;font-size:10px;color:var(--text-2);line-height:1.6;max-height:180px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;"></pre>
         </div>
       </div>
 
@@ -1185,12 +1208,13 @@
     buildModelSelector();
 
     // ── Tab switching ─────────────────────────
+    const ALL_TABS = ['file','paste','figma','url'];
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         currentTab = btn.dataset.tab;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        ['file','paste','figma'].forEach(t => {
+        ALL_TABS.forEach(t => {
           document.getElementById(`tab-${t}`).style.display = t === currentTab ? 'block' : 'none';
         });
       });
@@ -1247,6 +1271,155 @@
       addFiles(e.dataTransfer.files);
     });
 
+    // ── URL Scraper ───────────────────────────
+    let scrapedContent = null; // holds extracted text from URL fetch
+
+    document.getElementById('btn-fetch-url').addEventListener('click', fetchURL);
+    document.getElementById('btn-url-clear').addEventListener('click', () => {
+      scrapedContent = null;
+      document.getElementById('url-preview').style.display = 'none';
+      document.getElementById('url-status').style.display = 'none';
+      document.getElementById('scrape-url').value = '';
+      document.getElementById('url-raw-preview').textContent = '';
+    });
+
+    async function fetchURL() {
+      const rawUrl = document.getElementById('scrape-url').value.trim();
+      if (!rawUrl) { showError('Enter a URL to fetch.'); return; }
+
+      let url = rawUrl;
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+      const statusEl  = document.getElementById('url-status');
+      const previewEl = document.getElementById('url-preview');
+      const rawEl     = document.getElementById('url-raw-preview');
+      const btn       = document.getElementById('btn-fetch-url');
+
+      btn.textContent = 'Fetching…';
+      btn.disabled = true;
+      statusEl.style.display = 'block';
+      statusEl.textContent = `Fetching ${url}…`;
+      previewEl.style.display = 'none';
+      hideError();
+
+      try {
+        // Use allorigins CORS proxy
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl);
+        if (!res.ok) throw new Error(`Proxy returned ${res.status}`);
+        const json = await res.json();
+        const html = json.contents || '';
+
+        if (!html || html.length < 100) throw new Error('Page returned empty content. Try a different URL.');
+
+        // Extract brand-relevant content
+        scrapedContent = extractBrandTokensFromHTML(html, url);
+
+        statusEl.innerHTML = `✓ Fetched <strong>${url}</strong> — extracted ${scrapedContent.length} chars of brand data`;
+        rawEl.textContent = scrapedContent.slice(0, 1200) + (scrapedContent.length > 1200 ? '\n…(truncated for preview)' : '');
+        previewEl.style.display = 'block';
+
+      } catch (err) {
+        statusEl.textContent = '⚠ ' + (err.message || 'Could not fetch URL. Check the address and try again.');
+        statusEl.style.color = 'var(--error)';
+        scrapedContent = null;
+      } finally {
+        btn.textContent = 'Fetch';
+        btn.disabled = false;
+      }
+    }
+
+    function extractBrandTokensFromHTML(html, sourceUrl) {
+      // Parse into a document so we can query it
+      const parser = new DOMParser();
+      const doc    = parser.parseFromString(html, 'text/html');
+      const lines  = [`Source URL: ${sourceUrl}`, ''];
+
+      // ── Meta tags ───────────────────────────
+      const metaMap = {};
+      doc.querySelectorAll('meta[name],meta[property]').forEach(m => {
+        const k = (m.getAttribute('name') || m.getAttribute('property') || '').toLowerCase();
+        const v = m.getAttribute('content') || '';
+        if (v && (k.includes('description') || k.includes('title') || k.includes('og:') || k.includes('twitter:'))) {
+          metaMap[k] = v;
+        }
+      });
+      if (Object.keys(metaMap).length) {
+        lines.push('=== META TAGS ===');
+        Object.entries(metaMap).forEach(([k, v]) => lines.push(`${k}: ${v}`));
+        lines.push('');
+      }
+
+      // ── Page title ──────────────────────────
+      const title = doc.querySelector('title')?.textContent?.trim();
+      if (title) { lines.push(`Page title: ${title}`, ''); }
+
+      // ── CSS custom properties ───────────────
+      const cssVars = [];
+      doc.querySelectorAll('style').forEach(s => {
+        const matches = s.textContent.matchAll(/--[\w-]+\s*:\s*[^;}{]+/g);
+        for (const m of matches) cssVars.push(m[0].trim());
+      });
+      // Also scan <link> inline style attributes for quick vars
+      if (cssVars.length) {
+        lines.push('=== CSS CUSTOM PROPERTIES ===');
+        [...new Set(cssVars)].slice(0, 60).forEach(v => lines.push(v));
+        lines.push('');
+      }
+
+      // ── Inline style color values ────────────
+      const colorRegex = /#([0-9a-fA-F]{3,8})\b|rgba?\([^)]+\)|hsl\([^)]+\)/g;
+      const colorsFound = new Set();
+      doc.querySelectorAll('style').forEach(s => {
+        for (const m of s.textContent.matchAll(colorRegex)) colorsFound.add(m[0]);
+      });
+      // Scan element style attributes
+      doc.querySelectorAll('[style]').forEach(el => {
+        for (const m of el.getAttribute('style').matchAll(colorRegex)) colorsFound.add(m[0]);
+      });
+      if (colorsFound.size) {
+        lines.push('=== COLORS FOUND IN CSS ===');
+        [...colorsFound].slice(0, 40).forEach(c => lines.push(c));
+        lines.push('');
+      }
+
+      // ── Google Fonts / font-family ───────────
+      const fonts = new Set();
+      doc.querySelectorAll('link[href*="fonts.googleapis"]').forEach(l => fonts.add(l.getAttribute('href')));
+      doc.querySelectorAll('style').forEach(s => {
+        for (const m of s.textContent.matchAll(/font-family\s*:\s*([^;}{]+)/g)) fonts.add(m[1].trim());
+      });
+      if (fonts.size) {
+        lines.push('=== FONTS ===');
+        [...fonts].slice(0, 20).forEach(f => lines.push(f));
+        lines.push('');
+      }
+
+      // ── Logo / brand image hints ─────────────
+      const logoHints = [];
+      doc.querySelectorAll('img[src*="logo"],img[alt*="logo" i],img[class*="logo" i]').forEach(img => {
+        logoHints.push(`img src="${img.getAttribute('src')}" alt="${img.getAttribute('alt') || ''}"`);
+      });
+      if (logoHints.length) {
+        lines.push('=== LOGO IMAGES DETECTED ===');
+        logoHints.slice(0, 5).forEach(l => lines.push(l));
+        lines.push('');
+      }
+
+      // ── Body text sample ─────────────────────
+      const bodyText = (doc.body?.innerText || doc.body?.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 1500);
+      if (bodyText) {
+        lines.push('=== PAGE TEXT SAMPLE ===');
+        lines.push(bodyText);
+        lines.push('');
+      }
+
+      return lines.join('\n');
+    }
+
     // ── Extract ───────────────────────────────
     document.getElementById('btn-extract').addEventListener('click', extract);
 
@@ -1271,7 +1444,7 @@
       setStep(2);
 
       try {
-        btnLabel.textContent = 'Reading file…';
+        btnLabel.textContent = currentTab === 'url' ? 'Analysing page…' : 'Reading file…';
         const content = await buildContent();
 
 
@@ -1309,6 +1482,13 @@
         const url = document.getElementById('figma-url').value.trim();
         if (!url) throw new Error('Enter a Figma URL first.');
         return [{ type: 'text', text: `Figma URL to analyze: ${url}\n\nExtract brand tokens from this Figma file URL. If you cannot access the file directly, extract what you can from the URL structure and provide best-guess brand tokens based on typical design systems.` }];
+      }
+
+      if (currentTab === 'url') {
+        const rawUrl = document.getElementById('scrape-url').value.trim();
+        if (!rawUrl) throw new Error('Enter a URL to scrape first.');
+        if (!scrapedContent) throw new Error('Click "Fetch" to load the page before extracting.');
+        return [{ type: 'text', text: `Brand data scraped from website:\n\n${scrapedContent}` }];
       }
 
       // File upload — one or many

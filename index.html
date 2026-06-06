@@ -543,6 +543,44 @@
       border-left: 1px solid var(--border-md);
     }
 
+    /* ── User info ───────────────────────────────────────── */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 1px solid var(--border-md);
+      padding-left: 12px;
+    }
+
+    .user-email {
+      font-size: 12px;
+      color: var(--text-2);
+      max-width: 120px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .btn-logout {
+      height: 30px;
+      padding: 0 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--border-md);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .btn-logout:hover {
+      color: var(--text);
+      background: rgba(128, 128, 128, 0.06);
+    }
+
   </style>
 </head>
 <body>
@@ -555,6 +593,10 @@
         <button class="tt-btn" id="tt-dark" title="Dark mode">◐ Dark</button>
         <button class="tt-btn" id="tt-light" title="Light mode">○ Light</button>
         <button class="tt-btn" id="btn-settings" title="Settings">⚙ Settings</button>
+      </div>
+      <div class="user-info" id="user-info" style="display: none;">
+        <span class="user-email" id="user-email"></span>
+        <button class="btn-logout" id="btn-logout">Sign Out</button>
       </div>
       <a href="intake.html" class="btn btn-primary">+ New Brand</a>
     </div>
@@ -636,7 +678,56 @@
   </div>
 
   <script src="js/projects.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
   <script src="brand.config.js"></script>
+
+  <!-- Authentication Check -->
+  <script>
+  (function() {
+    'use strict';
+
+    // Dev bypass: skip auth on localhost for local testing
+    const IS_LOCAL = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+    // Check if user is authenticated
+    document.addEventListener('DOMContentLoaded', async () => {
+      let user = null;
+
+      if (!IS_LOCAL) {
+        await initSupabase();
+        user = await getAuthUser();
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+      }
+
+      // Show user info in header (use dev label on localhost)
+      const userEmail = document.getElementById('user-email');
+      const userInfo = document.getElementById('user-info');
+      if (userEmail && userInfo) {
+        userEmail.textContent = user ? (user.email || 'User') : 'Local Dev';
+        userInfo.style.display = 'flex';
+      }
+
+      // Wire logout button
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+          if (IS_LOCAL) { window.location.href = 'login.html'; return; }
+          try {
+            await signOut();
+            window.location.href = 'login.html';
+          } catch (err) {
+            console.error('[Logout] Error:', err);
+            alert('Failed to sign out: ' + err.message);
+          }
+        });
+      }
+    });
+  })();
+  </script>
 
   <!-- Theme toggle -->
   <script>

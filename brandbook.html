@@ -27,6 +27,7 @@
     <div class="sidebar-export">
       <button class="export-btn" onclick="__bbExportPDF && __bbExportPDF()" title="Print / Save as PDF">PDF</button>
       <button class="export-btn" onclick="__bbExportHTML && __bbExportHTML()" title="Download as HTML file">HTML</button>
+      <button class="export-btn" onclick="__bbExportMD && __bbExportMD()" title="Download as Markdown file">MD</button>
     </div>
     <div class="sidebar-bottom">
       <span class="sidebar-year" id="sidebar-year"></span>
@@ -37,9 +38,36 @@
 
   <main class="content" id="content"></main>
 
-  <!-- Load project data, then app -->
+  <!-- Load project data, auth, then app -->
   <script src="js/projects.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+
+  <!-- Authentication Check -->
   <script>
+  (function() {
+    'use strict';
+
+    // Dev bypass: skip auth on localhost for local testing
+    const IS_LOCAL = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+    // Check auth first, then load app
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!IS_LOCAL) {
+        await initSupabase();
+        const user = await getAuthUser();
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+      }
+
+      // Authenticated (or local dev) — load the app
+      loadApp();
+    });
+
+    // The main app loading logic (moved into loadApp function)
+    function loadApp() {
     // Resolve BRAND from URL ?id= → sessionStorage → localStorage.
     // Never falls back to brand.config.js — if nothing found, redirect to dashboard.
     (function() {
@@ -101,9 +129,30 @@
       var ss = fromSession(null);
       if (ss) { window.BRAND = ss; console.log('[Brandbook] BRAND set from sessionStorage (no id):', ss.name); loadApp(); return; }
 
-      // No id, no session — redirect to dashboard
+      // No id, no session — on localhost load demo brand, otherwise redirect
+      if (IS_LOCAL) {
+        console.log('[Brandbook] localhost dev — loading demo BRAND');
+        window.BRAND = {
+          id: 'demo',
+          name: 'April Studio',
+          year: new Date().getFullYear(),
+          accentColor: '#8B5CF6',
+          accentColor2: '#06B6D4',
+          coverBg: '#080810',
+          story: { headline: 'Where brands find their voice.', description: 'April is a Swiss-style brand guidelines generator — precise, structured, and built for clarity.' },
+          foundation: { mission: 'To help brands communicate with confidence and consistency.', vision: 'A world where every brand speaks clearly.', values: ['Clarity', 'Precision', 'Restraint'] },
+          logo: { primary: '', symbol: '', typographic: '', full: '', alt: [] },
+          colors: { primary: [{ hex: '#8B5CF6', name: 'Violet', usage: 'Primary accent' }, { hex: '#080810', name: 'Space', usage: 'Background' }], secondary: [{ hex: '#06B6D4', name: 'Cyan', usage: 'Secondary accent' }], functional: [] },
+          typography: { display: { name: 'Syne', weights: ['800'], usage: 'Headlines, display text' }, body: { name: 'Manrope', weights: ['400', '600', '700'], usage: 'Body copy, UI labels' }, conventions: [] },
+          imagery: { style: { description: 'Clean, geometric, high-contrast photography with dark environments.', keywords: ['minimal', 'geometric', 'dark', 'structured'], photos: [] }, dos: ['High contrast', 'Geometric composition', 'Minimal subjects'], donts: ['Busy backgrounds', 'Warm tones', 'Soft focus'] },
+          voice: { description: 'Precise, confident, and purposeful. We say more with less.', attributes: ['Precise', 'Direct', 'Structured'], weare: ['Clear', 'Confident', 'Minimal'], werenot: ['Verbose', 'Decorative', 'Vague'], channelTones: [] },
+          applications: [{ name: 'Business Card', description: 'Minimal, left-aligned, hairline rules.' }]
+        };
+        loadApp(); return;
+      }
       showNotFound('no ?id= in URL and no sessionStorage brand');
-    })();
+    }
+  })();
   </script>
 
   <style>
